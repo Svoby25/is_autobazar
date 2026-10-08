@@ -14,11 +14,11 @@ Aktuální verze zadání, otevřené otázky a rozhodnutí jsou ve složce [`02
 
 | Člen | Role | Odpovídá za |
 | --- | --- | --- |
-| _jméno_ | Vedoucí týmu / Product owner | Komunikace se zákazníkem, rozsah, finální rozhodnutí, prezentace milníků |
-| _jméno_ | Koordinátor | Kanban, termíny, schůzky, dodržování pravidel |
-| _jméno_ | Analytik | Požadavky, případy užití, upřesňování se zákazníkem |
-| _jméno_ | Návrhář | UC diagram, activity, sekvenční a třídní diagramy |
-| _jméno_ | Tester / dokumentarista | Akceptační kritéria, kontrola proti zadání, slovník, finální dokumentace |
+| Jitka Rentková | Vedoucí týmu / Product owner | Komunikace se zákazníkem, rozsah, finální rozhodnutí, prezentace milníků |
+| Aleš Mareš | Koordinátor | Kanban, termíny, schůzky, dodržování pravidel |
+| Martin Špaňúr | Analytik | Požadavky, případy užití, upřesňování se zákazníkem |
+| Jan Svoboda | Návrhář | UC diagram, activity, sekvenční a třídní diagramy |
+| Jana Šimunůnková | Tester / dokumentarista | Akceptační kritéria, kontrola proti zadání, slovník, finální dokumentace |
 
 Role určuje, za co člen odpovídá, ne že dělá jen to. Úkoly z backlogu si bere každý.
 
