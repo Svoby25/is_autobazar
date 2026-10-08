@@ -1,0 +1,54 @@
+name: Change request
+description: Změna zadání od zákazníka. Zakládá analytik.
+title: "CR: "
+labels: ["Požadavky"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Podle README se změna zpracovává v jedné větvi, aby rozdíl v jejím pull requestu posloužil jako podklad pro analýzu dopadu.
+
+  - type: input
+    id: zdroj
+    attributes:
+      label: Odkud změna přišla
+      description: Kdo ji sdělil, kdy a jakou cestou.
+      placeholder: "Zákazník na schůzce 3. 12."
+    validations:
+      required: true
+
+  - type: textarea
+    id: popis
+    attributes:
+      label: Co zákazník chce
+      description: Vlastními slovy, ne citací. Co má být jinak než dosud.
+    validations:
+      required: true
+
+  - type: textarea
+    id: pozadavky
+    attributes:
+      label: Dotčené požadavky
+      description: Podle ID z katalogu. Co se mění, co přibývá, co zaniká. ID se nemění ani po přečíslování.
+      placeholder: |
+        - F12 se mění: ...
+        - přibývá F30: ...
+        - L4 zaniká, protože ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: domysleno
+    attributes:
+      label: Co zákazník neřekl
+      description: Co si tým domyslel a co je potřeba doptat. Domyšlené body patří do otázek, ne do požadavků.
+    validations:
+      required: true
+
+  - type: textarea
+    id: rozpory
+    attributes:
+      label: Rozpory s dosavadním zadáním
+      description: Odporuje změna něčemu, co zákazník řekl dřív? Pokud ano, čemu.
+    validations:
+      required: false
