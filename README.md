@@ -39,6 +39,7 @@ diagrams/           zdrojové soubory PlantUML (.puml) a vygenerované obrázky
 
 - **Markdown** pro všechny textové artefakty.
 - **PlantUML** pro UML diagramy. Zdroj je v `.puml`, obrázek (SVG) leží vedle něj.
+  Kdo nechce PlantUML instalovat, spustí `./diagrams/render.sh`, který SVG vygeneruje přes Docker.
 - **VS Code** s rozšířeními PlantUML a Markdown Preview, případně GitHub Desktop.
 - **GitHub Issues a Projects** jako kanban.
 - **Microsoft Teams** jako hlavní komunikační kanál.
