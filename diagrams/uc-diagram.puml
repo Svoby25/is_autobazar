@@ -1,0 +1,126 @@
+@startuml uc-diagram
+' Use Case diagram IS autobazar, verze 0.1 (#9)
+' Případy užití a jejich trasování na požadavky: 04-pripady-uziti/pripady-uziti.md
+
+left to right direction
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam actorStyle awesome
+
+title IS autobazar – diagram případů užití (v0.1)
+
+actor "Obchodník" as Obch
+actor "Seniorní\nobchodník" as Sen
+actor "Majitel" as Maj
+actor "Pracovník\npřípravy" as Prip
+actor "Účetní" as Uc
+actor "Zájemce" as Zaj
+
+actor "Účetní systém" as UcSys <<systém>>
+actor "Firemní e-mailová\nschránka" as Mail <<systém>>
+
+Sen -up-|> Obch
+Maj -up-|> Sen
+
+rectangle "IS autobazar" {
+
+  package "Evidence vozidel" {
+    usecase "Založit vozidlo" as UC01
+    usecase "Zadat údaje\nkomisního prodeje" as UC02
+    usecase "Upravit vozidlo\na přiložit doklady" as UC03
+    usecase "Zapsat náklad\nna vozidlo" as UC04
+    usecase "Změnit stav vozidla" as UC05
+    usecase "Vyhledat vozidlo" as UC06
+  }
+
+  package "Výkup a ceny" {
+    usecase "Sjednat výkupní cenu" as UC07
+    usecase "Schválit výkupní cenu\nnebo cenu protiúčtu" as UC08
+  }
+
+  package "Zájemci a rezervace" {
+    usecase "Zaevidovat zájemce\na domluvu" as UC09
+    usecase "Podržet vozidlo\npro zájemce" as UC10
+    usecase "Naplánovat\nzkušební jízdu" as UC11
+    usecase "Vyřídit vypršelé\npodržení" as UC12
+    usecase "Potvrdit termín\nprohlídky" as UC13
+  }
+
+  package "Veřejná nabídka a inzerce" {
+    usecase "Prohlížet veřejnou\nnabídku" as UC14
+    usecase "Poslat dotaz nebo\ndomluvit prohlídku" as UC15
+    usecase "Evidovat inzerci\nvozidla" as UC16
+  }
+
+  package "Zákazníci" {
+    usecase "Přiřadit e-mail\nk zákazníkovi a vozidlu" as UC17
+    usecase "Zobrazit historii\nzákazníka" as UC18
+  }
+
+  package "Prodej a předání" {
+    usecase "Prodat vozidlo" as UC19
+    usecase "Identifikovat zákazníka\nz dokladu" as UC20
+    usecase "Poskytnout slevu" as UC21
+    usecase "Přijmout vozidlo\nna protiúčet" as UC22
+    usecase "Předat vozidlo" as UC23
+    usecase "Zaevidovat platbu" as UC24
+  }
+
+  package "Přehledy a správa" {
+    usecase "Zobrazit upozornění" as UC25
+    usecase "Zobrazit přehledy\nprodejů a marží" as UC26
+    usecase "Zobrazit historii\nzměn vozidla" as UC27
+    usecase "Spravovat uživatele\na role" as UC28
+  }
+}
+
+' --- Obchodník (dědí ho seniorní obchodník a majitel)
+Obch -- UC01
+Obch -- UC03
+Obch -- UC04
+Obch -- UC05
+Obch -- UC06
+Obch -- UC07
+Obch -- UC09
+Obch -- UC10
+Obch -- UC11
+Obch -- UC12
+Obch -- UC13
+Obch -- UC16
+Obch -- UC17
+Obch -- UC18
+Obch -- UC19
+Obch -- UC23
+Obch -- UC25
+
+' --- Seniorní obchodník (navíc oproti obchodníkovi)
+Sen -- UC08
+Sen -- UC21
+
+' --- Majitel (navíc oproti seniornímu obchodníkovi)
+Maj -- UC24
+Maj -- UC26
+Maj -- UC27
+Maj -- UC28
+
+' --- Pracovník přípravy a účetní (oprávnění nezvalidována, OT1)
+Prip -- UC04
+Prip -- UC06
+Uc -- UC24
+
+' --- Zájemce
+Zaj -- UC14
+Zaj -- UC15
+
+' --- Sekundární aktéři
+UC24 -- UcSys
+UC17 -- Mail
+
+' --- include / extend
+UC11 ..> UC20 : <<include>>
+UC19 ..> UC20 : <<include>>
+UC02 ..> UC01 : <<extend>>\n[komisní prodej]
+UC21 ..> UC19 : <<extend>>\n[zákazník žádá slevu]
+UC22 ..> UC19 : <<extend>>\n[zákazník nabízí\nvozidlo na protiúčet]
+
+@enduml
