@@ -2,7 +2,7 @@
 
 | Verze | Datum | Autor | Změna |
 | --- | --- | --- | --- |
-| 0.1 | 22. 10. 2026 | Dokumentarista (JanotkaSim), Analytik (alesmares) | První verze. Sloučeny dva nezávislé návrhy slovníku z issue #6. Zdroje sjednoceny s konvencí [katalogu požadavků](katalog-pozadavku.md), odkazy Q1–Q29 přečíslovány na O1–O29. Sloučení provedeno s pomocí AI, obsah pojmů pochází od autorů výše. |
+| 0.1 | 22. 10. 2026 | Dokumentarista (JanotkaSim), Koordinátor (alesmares) | První verze. Sloučeny dva nezávislé návrhy slovníku z issue #6. Zdroje sjednoceny s konvencí [katalogu požadavků](katalog-pozadavku.md), odkazy Q1–Q29 přečíslovány na O1–O29. Sloučení provedeno s pomocí AI, obsah pojmů pochází od autorů výše. |
 
 ## 1. Účel a pravidla
 
