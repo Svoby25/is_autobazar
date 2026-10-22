@@ -53,6 +53,23 @@ diagrams/           zdrojové soubory PlantUML (.puml) a vygenerované obrázky
 
 Do větve `main` se nezapisuje přímo.
 
+### Jak odevzdat práci, když neumíš git
+
+**Soubory nepřikládej do komentáře k issue.** V komentáři se nedá okomentovat konkrétní řádek, není vidět, co se oproti minulé verzi změnilo, a do repozitáře se soubor stejně nedostane — někdo ho tam pak musí přenést ručně.
+
+Pull request se dá založit přímo v prohlížeči, bez klonování a bez příkazové řádky:
+
+1. V repozitáři otevři složku, kam soubor patří, například `03-pozadavky`.
+2. **Add file → Upload files** a přetáhni soubor.
+3. Dole vyber **Create a new branch for this commit and start a pull request**.
+4. Název větve přepiš na číslo a název úkolu, například `12-slovnik-pojmu`.
+5. **Propose changes**, do popisu napiš `Closes #12` a potvrď **Create pull request**.
+6. Dej vědět v Teams, ať se na to někdo podívá.
+
+Existující soubor upravíš stejně: otevři ho, klikni na ikonu tužky, uprav text a dole zase zvol novou větev a pull request.
+
+Textové artefakty patří do Markdownu, ne do Wordu ani Excelu. Z `.docx` a `.xlsx` není v pull requestu vidět, co se změnilo, takže je nelze zkontrolovat.
+
 ### Commity
 
 Krátce, česky a s číslem úkolu:
