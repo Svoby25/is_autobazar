@@ -8,7 +8,10 @@
 set -euo pipefail
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-IMAGE="plantuml/plantuml:latest"
+# Verze je připíchnutá schválně – musí souhlasit s PLANTUML_IMAGE
+# v .github/workflows/diagramy.yml, jinak kontrola v CI hlásí rozdíly
+# jen kvůli jiné verzi PlantUML.
+IMAGE="plantuml/plantuml:1.2026.8"
 
 if [ $# -gt 0 ]; then
   TARGET="$1"
