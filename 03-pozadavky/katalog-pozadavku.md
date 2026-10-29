@@ -4,6 +4,7 @@
 | --- | --- | --- | --- |
 | 0.1 | 15. 10. 2026 | Jan Svoboda | První verze převzatá ze zadání v1.0. Doplněny zdroje a stav validace u každého požadavku. Připraveno s pomocí AI, zdroje ověřeny ručně proti [otázkám a odpovědím](../02-zadani/otazky-a-odpovedi.md). |
 | 0.2 | 22. 10. 2026 | Martin Špaňúr | Vyřešeny nezodpovězené otázky díky komunikaci se zákazníkem. Požadavky podle toho upraveny. |
+| 0.3 | 29. 10. 2026 | Martin Špaňúr | Dodáno navíc odpovědi na otázky přímo do souboru. |
 
 ## 1. Účel a pravidla
 
@@ -132,20 +133,20 @@ Legislativní požadavky doplnil tým z veřejných zdrojů uvedených v kap. 6 
 
 Navazují na kap. 9 zadání v1.0. Po odpovědi zákazníka se přepíše stav dotčených požadavků a zvýší se verze katalogu.
 
-| ID | Otázka | Dotčené požadavky |
-| --- | --- | --- |
-| OT1 | ~~Jaká oprávnění má pracovník přípravy a účetní a kdo spravuje uživatele?~~ | kap. 2.8, N6, N7 |
-| OT2 | ~~Kdo může být seniorní obchodník a jak se do této role zaměstnanec dostane?~~ | F7, F9, F25 |
-| OT3 | ~~Jakými způsoby zákazníci platí? Odpověď 13 uvádí převod a kartu, odpověď 26 hotovost do 100 000 Kč a úvěr.~~ | F24, L1, L2 |
-| OT4 | ~~Souhlasí klient s uváděním informace o komisním prodeji v nabídce a na vozidle?~~ | F18, L4 |
-| OT5 | ~~Jakou záruku klient poskytuje? Prodává i nová vozidla (odpověď 28)?~~ | L5 |
-| OT6 | ~~Jaký účetní systém klient používá a jaké údaje se do něj mají předávat?~~ | F26 |
-| OT7 | ~~Eviduje se číslo řidičského průkazu u všech zákazníků, nebo jen u zkušebních jízd?~~ | F14, L8 |
-| OT8 | ~~Jak dlouho se mají uchovávat údaje o zákaznících, kteří nekoupili?~~ | L8 |
-| OT9 | ~~Jaká hranice je pro N5 přijatelná, např. kolik vteřin nebo kliknutí?~~ | N5 |
-| OT10 | ~~Platí pro všechny nefunkční a legislativní požadavky priorita M?~~ | N1–N9, L1–L8 |
-| OT11 | ~~Odpovídají stavy vozidla a přechody mezi nimi praxi autobazaru? Kdy se vozidlo stahuje z prodeje?~~ | kap. 2.1, F16 |
-| OT12 | ~~Jak spolu souvisí podržení, záloha a rezervace? Kdo po vypršení podržení kontaktuje dalšího zájemce?~~ | F11, F12, F13 |
+| ID | Otázka | Dotčené požadavky | Odpověď |
+| --- | --- | --- | --- |
+| OT1 | Jaká oprávnění má pracovník přípravy a účetní a kdo spravuje uživatele? | kap. 2.8, N6, N7 | Majitel spravuje uživatele. Účetní ani pracovník přípravy toto nedělá.
+| OT2 | Kdo může být seniorní obchodník a jak se do této role zaměstnanec dostane? | F7, F9, F25 | O seniorním obchodníkovi rozhoduje majitel. |
+| OT3 | Jakými způsoby zákazníci platí? Odpověď 13 uvádí převod a kartu, odpověď 26 hotovost do 100 000 Kč a úvěr. | F24, L1, L2 | Platba všude kartou i hotovost i úvěr. Podezření na bázi historie zákazníka (prvotní zákazník). |
+| OT4 | Souhlasí klient s uváděním informace o komisním prodeji v nabídce a na vozidle? | F18, L4 | Zákazník musí vědět dopředu. |
+| OT5 | Jakou záruku klient poskytuje? Prodává i nová vozidla (odpověď 28)? | L5 | Záruka 1 měsíc na motor a karoserii, elektro. 0.5 roku na skryté vady. |
+| OT6 | Jaký účetní systém klient používá a jaké údaje se do něj mají předávat? | F26 | Systém: Pohoda. Na všechny faktury. | 
+| OT7 | Eviduje se číslo řidičského průkazu u všech zákazníků, nebo jen u zkušebních jízd? | F14, L8 | Pouze u zkušebních jízd (majitelem může být i člověk bez řidičáku), eviduje se jméno + číslo průkazu a kontakt. |
+| OT8 | Jak dlouho se mají uchovávat údaje o zákaznících, kteří nekoupili? | L8 | Po dobu oprávněného zájmu nebo žádosti o smazání údajů, nebo podle GDPR pokud data nesvěřil podle oprávněného zájmu. |
+| OT9 | Jaká hranice je pro N5 přijatelná, např. kolik vteřin nebo kliknutí? | N5 | Netřeba počet kliknutí specifikovat - doba do 5 minut odepsání přijetí/reakce je ale nutná. |
+| OT10 | Platí pro všechny nefunkční a legislativní požadavky priorita M? | N1–N9, L1–L8 | Nemusí být okamžitě podpora na tablet. |
+| OT11 | Odpovídají stavy vozidla a přechody mezi nimi praxi autobazaru? Kdy se vozidlo stahuje z prodeje? | kap. 2.1, F16 | Stačí jak to je viz. F16.
+| OT12 | Jak spolu souvisí podržení, záloha a rezervace? Kdo po vypršení podržení kontaktuje dalšího zájemce? | F11, F12, F13 | Auta mají přiřazeného obchodního zástupce, ten to vše řeší. Obchodní zástupci spolu komunikují přes systém, v minimální verzi komunikace může probíhat mimo systém. |
 
 ## 6. ~~Souhrn~~ dávno outdated, není třeba?
 
