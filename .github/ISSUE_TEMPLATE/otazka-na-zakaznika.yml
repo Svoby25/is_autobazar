@@ -1,0 +1,44 @@
+name: Otevřená otázka na zákazníka
+description: Něco, co ze zadání nevyplývá a nesmí se domyslet.
+title: "Otázka: "
+labels: ["Požadavky"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Definice „hotovo“ vyžaduje otevřené otázky místo domýšlení nepodložených detailů. Odpověď patří po zodpovězení do `02-zadani/otazky-a-odpovedi.md`.
+
+  - type: textarea
+    id: otazka
+    attributes:
+      label: Otázka
+      description: Formuluj tak, aby na ni šlo odpovědět bez znalosti UML.
+    validations:
+      required: true
+
+  - type: textarea
+    id: kontext
+    attributes:
+      label: Proč se ptáme
+      description: Který artefakt nebo požadavek na odpovědi visí a co se bez ní nedá dokončit.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: dopad
+    attributes:
+      label: Co se stane, když odpověď nepřijde
+      options:
+        - Práce se zastaví, bez odpovědi to nejde dál
+        - Pokračujeme na základě předpokladu, který je potřeba později ověřit
+        - Netlačí, ale je potřeba to dořešit do odevzdání
+    validations:
+      required: true
+
+  - type: textarea
+    id: predpoklad
+    attributes:
+      label: Předpoklad, se kterým zatím pracujeme
+      description: Pokud se dál pokračuje na základě domněnky, napiš jakou. Musí být zapsaná i v artefaktu, kterého se týká.
+    validations:
+      required: false

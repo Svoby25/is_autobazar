@@ -1,0 +1,79 @@
+name: Týdenní status
+description: Status týmu za uplynulý týden. Zakládá koordinátor jednou týdně.
+title: "Týdenní status – týden "
+labels: ["Řízení"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Vyplň před týdenní schůzkou nad kanbanem. Kdo se nemůže zúčastnit, napíše stav svých úkolů do komentáře předem.
+
+  - type: input
+    id: obdobi
+    attributes:
+      label: Období
+      description: Číslo týdne podle plánu semestru a datum schůzky.
+      placeholder: "Týden 5, 22. 10."
+    validations:
+      required: true
+
+  - type: textarea
+    id: hotovo
+    attributes:
+      label: Co se udělalo
+      description: Dokončené úkoly s odkazem na issue nebo pull request.
+      placeholder: |
+        - #6 Slovník pojmů – sloučeno v #41
+        - #7 Vymezení rozsahu – ke kontrole
+    validations:
+      required: true
+
+  - type: textarea
+    id: nestihlo
+    attributes:
+      label: Co se nestihlo a proč
+      description: Včetně toho, zda se úkol posouvá, nebo přerozděluje. Podle pravidel týmu se skluz hlásí nejpozději 2 dny před termínem.
+    validations:
+      required: true
+
+  - type: textarea
+    id: plan
+    attributes:
+      label: Co kdo dělá příští týden
+      description: Nejvýše 2 rozpracované úkoly na člena.
+    validations:
+      required: true
+
+  - type: textarea
+    id: blokace
+    attributes:
+      label: Blokace
+      description: Co někoho zdržuje a kdo to může odblokovat. Čekání na odpověď zákazníka sem patří taky.
+    validations:
+      required: false
+
+  - type: textarea
+    id: otevrene-otazky
+    attributes:
+      label: Nové otevřené otázky na zákazníka
+      description: Co se tenhle týden ukázalo jako nejasné. Patří do `02-zadani/otazky-a-odpovedi.md`, tady jen soupis.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: opakovane
+    attributes:
+      label: Opakované úkoly
+      description: Tři úkoly, které plán semestru ukládá každý týden.
+      options:
+        - label: Registr rizik zrevidován (vedoucí)
+        - label: Slovník a otevřené otázky aktualizovány (dokumentarista)
+        - label: Kanban odpovídá skutečnosti (koordinátor)
+
+  - type: textarea
+    id: poznamky
+    attributes:
+      label: Poznámky ze schůzky
+      description: Rozhodnutí, na kterých se tým domluvil. Při neshodě rozhoduje vedoucí týmu.
+    validations:
+      required: false

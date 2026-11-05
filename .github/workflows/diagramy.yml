@@ -1,0 +1,70 @@
+name: Diagramy
+
+# Běží u každého pull requestu, i když se diagramy nezměnily. Je to schválně:
+# kdyby se job pouštěl jen při změně v diagrams/, povinná kontrola by u ostatních
+# pull requestů čekala navždy na běh, který nikdy nepřijde.
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  # Musí souhlasit s verzí v diagrams/render.sh, jinak kontrola hlásí rozdíly
+  # jen kvůli jiné verzi PlantUML.
+  PLANTUML_IMAGE: plantuml/plantuml:1.2026.8
+
+jobs:
+  kontrola:
+    name: Zdroje a obrázky spolu souhlasí
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Najít zdroje diagramů
+        id: zdroje
+        run: |
+          pocet=$(find diagrams -name '*.puml' | wc -l)
+          echo "pocet=$pocet" >> "$GITHUB_OUTPUT"
+          echo "Nalezeno zdrojů: $pocet"
+
+      - name: Vygenerovat obrázky načisto
+        if: steps.zdroje.outputs.pocet != '0'
+        run: |
+          ref="$RUNNER_TEMP/ref"
+          cp -r diagrams "$ref"
+          find "$ref" -name '*.svg' -delete
+
+          vystup=$(docker run --rm -v "$ref:/work" -w /work \
+            -u "$(id -u):$(id -g)" "$PLANTUML_IMAGE" -tsvg -r . 2>&1)
+          echo "$vystup"
+
+          if grep -qi 'error' <<<"$vystup"; then
+            echo "::error::Některý zdroj diagramu se nepodařilo zpracovat. Oprav ho podle hlášky výše."
+            exit 1
+          fi
+          echo "Všechny zdroje se zpracovaly bez chyby."
+
+      - name: Porovnat se stavem v repozitáři
+        if: steps.zdroje.outputs.pocet != '0'
+        run: |
+          ref="$RUNNER_TEMP/ref"
+          chyba=0
+
+          while IFS= read -r puml; do
+            rel="${puml#diagrams/}"
+            svg="diagrams/${rel%.puml}.svg"
+            if [ ! -f "$svg" ]; then
+              echo "::error file=$puml::Chybí obrázek $svg. Spusť ./diagrams/render.sh a výsledek commitni."
+              chyba=1
+            elif ! diff -q "$ref/${rel%.puml}.svg" "$svg" >/dev/null; then
+              echo "::error file=$svg::Obrázek neodpovídá zdroji $puml. Spusť ./diagrams/render.sh a výsledek commitni."
+              chyba=1
+            fi
+          done < <(find diagrams -name '*.puml' | sort)
+
+          if [ "$chyba" -eq 0 ]; then
+            echo "Všechny obrázky odpovídají svým zdrojům."
+          fi
+          exit "$chyba"
