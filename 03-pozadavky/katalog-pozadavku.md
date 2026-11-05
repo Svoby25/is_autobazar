@@ -310,7 +310,8 @@ Navazují na kap. 9 zadání v1.0. Po odpovědi zákazníka se přepíše stav d
 | OT9 | Jaká hranice je pro N5 přijatelná, např. kolik vteřin nebo kliknutí? | N5 | Netřeba počet kliknutí specifikovat - doba do 5 minut odepsání přijetí/reakce je ale nutná. |
 | OT10 | Platí pro všechny nefunkční a legislativní požadavky priorita M? | N1–N9, L1–L8 | Nemusí být okamžitě podpora na tablet. |
 | OT11 | Odpovídají stavy vozidla a přechody mezi nimi praxi autobazaru? Kdy se vozidlo stahuje z prodeje? | kap. 2.1, F16 | Stačí jak to je viz. F16.
-| OT12 | Jak spolu souvisí podržení, záloha a rezervace? Kdo po vypršení podržení kontaktuje dalšího zájemce? | F11, F12, F13 | Auta mají přiřazeného obchodního zástupce, ten to vše řeší. Obchodní zástupci spolu komunikují přes systém, v minimální verzi komunikace může probíhat mimo systém. |
+| OT12 | Jak spolu souvisí podržení, záloha a rezervace?  | F11, F12 | Auta mají přiřazeného obchodního zástupce, ten to vše řeší. |
+| OT13 | Kdo po vypršení podržení kontaktuje dalšího zájemce? | F13 | Obchodní zástupci spolu komunikují přes systém, v minimální verzi komunikace může probíhat mimo systém. |
 
 ## 7. ~~Souhrn~~ dávno outdated, není třeba?
 
