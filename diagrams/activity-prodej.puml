@@ -1,0 +1,124 @@
+@startuml
+' v0.1 | 2026-11-11 | Návrh s pomocí AI; kontrola týmem čeká.
+' Specifikace: ../04-pripady-uziti/uc19-uc23-prodej-a-predani.md
+title Prodej a předání vozidla\nUC19 → UC23 — vlastní vozidlo, komise a protiúčet
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam activityBackgroundColor #EDF4FA
+skinparam activityBorderColor #35536B
+skinparam ArrowColor #35536B
+skinparam NoteBackgroundColor #FFF5D6
+start
+:Zákazník se rozhodne koupit konkrétní vozidlo;
+:Obchodník ověří vozidlo, dostupnost\na domluvy včetně rezervace (UC05, UC10);
+note right
+  P1: Nelze obejít platný příslib jinému zájemci.
+  Přesná pravidla uvolnění řeší OT12.
+end note
+if (Vozidlo je dostupné pro tento prodej?) then (ano)
+else (ne / nejasné)
+  :Prodej nepokračuje; zapsat důvod\na potřebné vyjasnění;
+  stop
+endif
+:Ověřit identifikaci zákazníka (UC20)\na údaje potřebné pro smlouvu;
+if (Údaje a identifikace jsou úplné?) then (ano)
+else (ne)
+  :Vyžádat doplnění; doklady nevygenerovat;\nprodej nyní nedokončit;
+  stop
+endif
+if (Zákazník žádá slevu?) then (ano)
+  :Slevu zadá pouze seniorní obchodník\nnebo majitel; zapsat autora, čas a výši (F25);
+  if (Cena je dohodnutá oprávněnou rolí?) then (ano)
+  else (ne)
+    :Zapsat nedohodu; prodej nedokončit;
+    stop
+  endif
+endif
+if (Prodávané vozidlo je komisní?) then (ano)
+  :Ověřit komitenta, minimální prodejní cenu,\nmarži a plnou moc (F8);
+  if (Údaje a plná moc existují\na konečná cena není pod minimem?) then (ano)
+  else (ne)
+    :Zapsat chybějící podklady nebo nízkou cenu;\nprodej nedokončit (F8);
+    stop
+  endif
+else (vlastní / dříve přijaté na protiúčet)
+  :Použít evidované údaje prodávaného vozidla;\nkomitent ani plná moc komitenta se nevyžadují;
+endif
+if (Zákazník nabízí jiné vozidlo na protiúčet?) then (ano)
+  :Sjednat cenu přijímaného vozidla;
+  :Cenu schválí majitel\nnebo seniorní obchodník (F9, UC22);
+  if (Cena protiúčtu schválena?) then (ano)
+    :Založit přijímané vozidlo jako nové\na navázat je na rozpracovaný prodej (F9);
+    note right
+      Protiúčet je nezávislý na typu prodávaného vozidla:
+      může doprovázet i komisní prodej.
+      Q1: okamžik převodu vlastnictví, výpočet doplatku
+      a osud nového záznamu při zrušení prodeje?
+    end note
+  else (ne)
+    :Prodej s tímto protiúčtem nedokončit;\nzaznamenat důvod;
+    stop
+  endif
+endif
+:Systém připraví kupní smlouvu\nz údajů vozidla a zákazníka (F22);
+note right
+  Q2 / OT5: sjednocení záručních podmínek.
+  Diagram neurčuje záruční lhůtu.
+  Nevyjasněné údaje smlouvy nejprve doplnit.
+end note
+if (Smlouva je úplná a zákazník ji podepíše?) then (ano)
+  :Zaevidovat podepsanou smlouvu;\noznačit vozidlo Prodáno a skrýt z nabídky (F16);
+else (ne)
+  :Zaznamenat chybějící údaje nebo odmítnutí;\nvozidlo neoznačit Prodáno;
+  stop
+endif
+:Navázat na evidenci platby (UC24, F24)\na účetní systém (UC24, F26);
+note right
+  OT3: O13 uvádí převod/kartu, O26 hotovost
+  do 100 000 Kč a úvěr. Novější katalog připouští
+  všechny způsoby, starší kritéria stále hlásí rozpor.
+  Q3: potvrdit hotovostní limit, okamžik „zaplaceno“,
+  účinek zálohy, úvěru a protiúčtu na doplatek.
+  Diagram neprovádí platbu ani neurčuje tyto podmínky.
+end note
+if (Zaplacení je doložené\npodle potvrzených pravidel?) then (ano)
+else (ne / nejasné)
+  :Ponechat Prodáno, čeká na platbu / vyjasnění;\nvozidlo nepředat;
+  note right
+    Podepsaná smlouva se tím automaticky neruší.
+    Q4: odstoupení, storno a vypořádání plateb
+    vyžadují samostatná pravidla.
+  end note
+  stop
+endif
+:Obchodník doplní technický stav,\ntachometr a odkaz na doklad STK (L6);
+if (Podklady protokolu jsou úplné?) then (ano)
+  :Vygenerovat předávací protokol (F22, L6);
+else (ne)
+  :Vyžádat doplnění; protokol nevygenerovat;\nvozidlo nepředat, ponechat Prodáno;
+  stop
+endif
+:Systém ověří kontrolní seznam (F23):\npodepsaná smlouva, technický průkaz,\nu komise plná moc, zaplaceno, identifikace;
+note right
+  Q5: který technický průkaz zákazník požaduje?
+  U splnění položek evidovat autora a čas (F23/3).
+end note
+if (Všechny položky splněny?) then (ano)
+else (ne)
+  :Zobrazit chybějící položky;\nblokovat stav Předáno; ponechat Prodáno;
+  stop
+endif
+:Obchodník fyzicky předá vozidlo\na příslušné doklady zákazníkovi;
+if (Předání skutečně proběhlo?) then (ano)
+  :Zaznamenat předání a stav Předáno;\nuložit autora a čas změny (F29);
+  :Navázat na historii, evidenci záruky\na hlídání přepisu (F21, F27, L5);
+else (ne)
+  :Zapsat důvod odložení;\nponechat Prodáno, nikoli Předáno;
+endif
+stop
+legend bottom
+  Žluté poznámky označují nejistoty a předpoklady, nikoli potvrzená pravidla.
+  Pracovní specifikace UC19/UC23 je v doprovodném souboru.
+  Obnovení přerušeného procesu vždy vyžaduje novou kontrolu aktuálních podkladů.
+endlegend
+@enduml
