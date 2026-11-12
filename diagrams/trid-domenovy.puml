@@ -1,0 +1,146 @@
+@startuml
+' v0.1 | 2026-11-11 | Návrh s pomocí AI; kontrola týmem čeká.
+' Podklady a otázky: ../05-modely/domenovy-model.md
+title Doménový model IS Autobazar\nPojmy a vztahy pro UC05, UC09, UC10, UC19 a UC23
+left to right direction
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam nodesep 70
+skinparam ranksep 100
+skinparam packageStyle rectangle
+skinparam classBackgroundColor #EDF4FA
+skinparam classBorderColor #35536B
+skinparam NoteBackgroundColor #FFF5D6
+hide methods
+hide circle
+
+package "Vozidlo a formy prodeje" {
+  class "Vozidlo" as V {
+    VIN
+    SPZ [nepovinná]
+    hrubý technický stav
+    technický stav
+    stav
+    typ prodeje
+    výkupní cena [pokud se uplatní]
+    prodejní cena
+    /pořizovací cena
+  }
+  class "Náklady" as N {
+    druh výdaje
+    částka
+  }
+  class "Komisní prodej" as K {
+    minimální prodejní cena
+    marže
+  }
+  class "Komitent" as KO
+  class "Plná moc" as PM
+  class "Protiúčet" as PR {
+    cena protiúčtu
+  }
+  V "1" -- "0..*" N : eviduje
+  V "1" -- "0..*" K : komisní dohody [P1]
+  KO "1" -- "0..*" K : svěřuje vozidlo
+  K "1" -- "0..*" PM : dokládá oprávnění [Q4]
+  PR "0..*" -- "1" V : přijaté vozidlo [Q3]
+  note top of V
+    Typ prodeje: vlastní / komisní / protiúčet (F6).
+    Vlastní vozidlo je vozidlo ve vlastnictví autobazaru.
+    Nejde o neměnné podtřídy: původ a vlastnictví
+    se mohou měnit; pravidla změn jsou Q3.
+    Odvozená pořizovací cena podle F4;
+    výpočet komisní marže není určen.
+  end note
+}
+
+package "Zájemci a přísliby" {
+  class "Zájemce" as Z
+  class "Domluva" as D {
+    druh domluvy
+    obsah domluvy
+    sjednáno kdy
+  }
+  class "Podržení" as P {
+    platnost do
+  }
+  class "Rezervace" as R {
+    platnost
+  }
+  class "Pořadí zájemců" as PO
+  class "Obchodník" as O <<role>>
+  D <|-- P
+  V "1" -- "0..*" D : týká se
+  Z "1" -- "0..*" D : sjednává
+  O "1" -- "0..*" D : zaznamenal
+  V "1" -- "0..*" R : historie rezervací
+  Z "1" -- "0..*" R : rezervováno pro
+  V "1" -- "0..1" PO : aktuální pořadí
+  PO "0..*" -- "0..*" Z : čekající {ordered, unique}
+  P .. R : vztah nevyjasněn (OT12)
+  note bottom of R
+    F12: u jednoho vozidla nejvýše jedna
+    platná rezervace v daném okamžiku.
+    0..* zachovává i ukončené rezervace.
+    Podržení dědí vozidlo, zájemce a autora z Domluvy.
+    OT12: netvrdíme, že Podržení a Rezervace jsou totéž.
+  end note
+  note bottom of PO
+    Jeden zájemce může čekat u více vozidel.
+    Pořadí patří vozidlu, nikoli osobě globálně.
+    Q1: pravidlo řazení a historie změn pořadí?
+  end note
+}
+
+package "Prodej a předání" {
+  class "Zákazník" as ZA
+  class "Kupní smlouva" as S {
+    podepsána
+  }
+  class "Předávací protokol" as PP {
+    technický stav
+    tachometr
+    odkaz na doklad STK
+  }
+  class "Kontrolní seznam před předáním" as KS {
+    podepsaná smlouva
+    technický průkaz
+    plná moc u komise
+    zaplaceno
+    identifikace zákazníka
+  }
+  class "Technický průkaz" as TP
+  class "Sleva" as SL {
+    výše
+    zadána kdy
+  }
+  class "Záloha" as ZAL {
+    částka
+  }
+  V "1" -- "0..*" S : prodávané vozidlo [P2]
+  ZA "1" -- "0..*" S : kupující [Q2]
+  S "1" -- "0..*" PR : přijímá na protiúčet [Q3]
+  S "1" -- "0..*" SL : poskytnuté slevy
+  S "1" -- "0..*" PP : podklady předání [Q4]
+  S "1" -- "0..1" KS : aktuální kontrola [P3]
+  V "1" -- "0..*" TP : přiložené doklady [Q4]
+  ZA "1" -- "0..*" ZAL : poskytl [Q2]
+  V "1" -- "0..*" ZAL : určena na vozidlo
+  ZAL .. R : účinek neurčen (OT12)
+  Z .. ZA : návaznost identity neurčena (Q2)
+  note bottom of KS
+    F23: Předáno jen při splnění všech položek.
+    Samotný seznam neprokazuje fyzické předání.
+    F25: slevu zadává jen seniorní obchodník / majitel.
+    Role schvalovatelů nejsou modelovány jako osoby.
+  end note
+}
+
+legend bottom
+  Pracovní doménový model — bez operací, datových typů a databázových klíčů.
+  Plné čáry: asociace s násobnostmi; trojúhelník: specializace Domluvy.
+  Tečkované vztahy označují otevřenou otázku, nikoli potvrzenou asociaci.
+  P1–P3: předpoklady modelu; Q1–Q4 a OT12 viz doprovodný dokument.
+  Rozsah: jádro scénářů M1; účetnictví, správa účtů a inzerce nejsou rozpracovány.
+endlegend
+@enduml
