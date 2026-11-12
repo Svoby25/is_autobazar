@@ -1,0 +1,110 @@
+@startuml
+' v0.1 | 2026-11-11 | Návrh s pomocí AI; kontrola dalším členem týmu čeká.
+' Specifikace: ../04-pripady-uziti/uc10-podrzet-vozidlo.md
+title Podržení vozidla a pořadí zájemců\nUC10 a návaznost UC12 — F10 až F13
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam activityBackgroundColor #EDF4FA
+skinparam activityBorderColor #35536B
+skinparam ArrowColor #35536B
+skinparam NoteBackgroundColor #FFF5D6
+start
+:Zvolit událost u konkrétního vozidla;
+if (Nová žádost o podržení?) then (ano)
+  :Obchodník vybere zájemce a zapíše domluvu\nvčetně autora a času (F10);
+  :Systém zobrazí platný závazek\na pořadí zájemců (F12);
+  if (Existuje platná rezervace?) then (ano)
+    :Nevytvořit druhou platnou rezervaci;
+    if (Zájemce chce čekat?) then (ano)
+      :Obchodník zařadí zájemce do pořadí;
+      note right
+        Q1: Pravidlo řazení a změny pořadí
+        není potvrzené. Nezavádíme FIFO.
+      end note
+    else (ne)
+      :Ponechat domluvu bez nové rezervace;
+    endif
+  else (ne)
+    :Obchodník sjedná individuální\ndobu platnosti podržení (F11);
+    :Zadá vozidlo, zájemce a platnost;
+    if (Údaje úplné a platnost v budoucnu?) then (ano)
+      :Systém při uložení znovu ověří,\nže nevznikne druhá platná rezervace;
+      note right
+        Souběh dvou obchodníků: uspět smí
+        nejvýše jeden požadavek (F12).
+      end note
+      if (Uložení bez konfliktu?) then (ano)
+        :Uložit podržení pro zájemce\na sjednanou dobu platnosti;
+        note right
+          OT12: přesný vztah podržení, rezervace
+          a zálohy není vyjasněný.
+          Chrání se jediný platný příslib;
+          vznik rezervace ze zálohy se neurčuje.
+        end note
+      else (ne)
+        :Zobrazit konflikt a aktuální stav;
+        if (Zájemce chce čekat?) then (ano)
+          :Obchodník zařadí zájemce do pořadí;
+        else (ne)
+          :Ponechat domluvu bez nové rezervace;
+        endif
+      endif
+    else (ne)
+      :Zobrazit chybu; nový závazek neuložit;
+      note right
+        P1: validace úplnosti a budoucí platnosti
+        je návrh týmu k potvrzení.
+        Oprava znamená nový průchod UC10.
+      end note
+    endif
+  endif
+else (ne)
+  if (Uplynula platnost podržení / rezervace?) then (ano)
+    :Ověřit aktuální závazek\na sjednanou platnost;
+    if (Závazek skutečně vypršel?) then (ano)
+      :Ukončit platnost závazku; vozidlo\njiž není rezervované (F13/2);
+      :Upozornit obchodníka, který\npodržení sjednal (F13/1, UC12);
+    else (ne / mezitím změněno)
+      :Ponechat závazek beze změny;\nzobrazit aktuální stav;
+      stop
+    endif
+  else (zrušení zájemcem)
+    :Obchodník ověří zájemce\na dotčený platný závazek;
+    if (Zrušení se týká aktuálního závazku?) then (ano)
+      :Zapsat zrušení, autora a čas;\nukončit platnost závazku;
+      note right
+        P2: ukončení a uvolnění po zrušení
+        je návrh týmu k potvrzení.
+        Q2: účinnost zrušení a vrácení zálohy?
+        Platby řeší UC24, nikoli tento diagram.
+      end note
+    else (ne)
+      :Oznámit nesoulad; závazek neměnit;\nzobrazit aktuální stav;
+      stop
+    endif
+  endif
+  if (Čeká další zájemce v pořadí?) then (ano)
+    :Nabídnout vozidlo dalšímu zájemci (F13);
+    :Přiřazený obchodník řeší kontakt\na navazující domluvu (OT12, OT13);
+    note right
+      Nová rezervace nevzniká automaticky.
+      Nové podržení prochází znovu UC10.
+      V minimální verzi může komunikace
+      probíhat mimo systém (OT13).
+    end note
+  else (ne)
+    :Zobrazit vozidlo bez platné rezervace;
+    note right
+      Neznamená automaticky Připraveno k prodeji.
+      Ostatní podmínky dostupnosti řeší UC05.
+    end note
+  endif
+endif
+:Zobrazit, komu a do kdy je vozidlo slíbeno,\na aktuální pořadí zájemců;
+stop
+legend bottom
+  Žluté poznámky: otevřené otázky a předpoklady k potvrzení.
+  N5: dostupnost a založení rezervace včetně potvrzení do 5 minut.
+  Podklady: katalog, slovník, O6/O7; doprovodná specifikace UC10.
+endlegend
+@enduml
