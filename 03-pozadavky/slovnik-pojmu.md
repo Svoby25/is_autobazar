@@ -3,6 +3,7 @@
 | Verze | Datum | Autor | Změna |
 | --- | --- | --- | --- |
 | 0.1 | 22. 10. 2026 | Dokumentarista (JanotkaSim), Koordinátor (alesmares) | První verze. Sloučeny dva nezávislé návrhy slovníku z issue #6. Zdroje sjednoceny s konvencí [katalogu požadavků](katalog-pozadavku.md), odkazy Q1–Q29 přečíslovány na O1–O29. Sloučení provedeno s pomocí AI, obsah pojmů pochází od autorů výše. |
+| 0.2 | 12. 11. 2026 | Jan Svoboda | Slovník sjednocen s [doménovým modelem tříd](../05-modely/domenovy-model.md) (#17): doplněna kapitola 12 se srovnáním všech 19 tříd a u pojmů, na které zákazník mezitím odpověděl (OT2, OT4, OT7), upraven stav. Žádný pojem nebyl přejmenován — model i slovník používaly shodné názvy. Připraveno s pomocí AI, každá změna stavu ověřena proti odpovědi v kap. 6 [katalogu](katalog-pozadavku.md). |
 
 ## 1. Účel a pravidla
 
@@ -22,7 +23,7 @@ Sloupce mají stejný význam jako v [katalogu požadavků](katalog-pozadavku.md
   - **předpoklad** – odvodil tým, zákazník zatím nepotvrdil,
   - **otevřeno** – pojem je v rozporu s odpovědí zákazníka nebo chybí rozhodnutí; odkazuje na otevřenou otázku (OT) v katalogu.
 
-V týdnu 7 se slovník sjednotí s modelem tříd (#17).
+Slovník je sjednocen s [doménovým modelem tříd](../05-modely/domenovy-model.md), viz kapitola 12.
 
 ## 2. Vozidlo a jeho identifikace
 
@@ -41,7 +42,7 @@ V týdnu 7 se slovník sjednotí s modelem tříd (#17).
 | Pojem | Definice | Zdroj | Stav | Poznámka |
 | --- | --- | --- | --- | --- |
 | Vlastní vozidlo | Vozidlo, které autobazar koupil a je jeho majitelem. | PZ, F6, O5 | potvrzeno | |
-| Komisní prodej | Prodej vozidla cizího majitele, za který autobazar dostane marži. Vozidlo mu nepatří. Sjednává se minimální prodejní cena. | PZ, F6, F8, O5 | otevřeno | Zákazník chce informaci o komisi sdělit až při prohlídce (O27), zadání ji požaduje už v nabídce. Viz OT4 a L4. |
+| Komisní prodej | Prodej vozidla cizího majitele, za který autobazar dostane marži. Vozidlo mu nepatří. Sjednává se minimální prodejní cena. | PZ, F6, F8, O5 | potvrzeno | Rozpor s O27 vyřešen odpovědí na OT4: zákazník musí o komisi vědět dopředu, informace patří do nabídky (F18, L4). |
 | Komitent | Majitel vozidla v komisním prodeji, který ho autobazaru svěřil k prodeji. | F8, L4 | částečně | Pojem pochází ze zadání, zákazník ho v odpovědích nedefinuje. |
 | Protiúčet | Vozidlo zákazníka přijaté jako část platby za jiné vozidlo. Zakládá se jako nové vozidlo napojené na původní prodej. | PZ, F6, F9, O5 | částečně | Napojení na původní prodej navrhl tým. Není potvrzeno, kdy se vozidlo stává majetkem autobazaru. |
 | Výkupní cena | Cena, za kterou autobazar vozidlo vykoupil. Sjednává ji obchodník nebo majitel, schvaluje majitel nebo seniorní obchodník. | F1, F7, O3 | částečně | Vztah k pojmu „nákupní cena“ není vyjasněn. |
@@ -76,7 +77,7 @@ V týdnu 7 se slovník sjednotí s modelem tříd (#17).
 | Lze ukázat | Vozidlo je fyzicky na ploše, připravené, lze ho předvést i vyzkoušet. Systém tuto informaci u každého vozidla viditelně uvádí. | PZ, kap. 2, kap. 4.1 | potvrzeno | |
 | Veřejná nabídka | Webová nabídka vozidel připravených k prodeji. Obsahuje cenu, popis, technický stav a fotografie. | F15, F16, O10 | potvrzeno | |
 | Inzerát | Záznam o inzerci vozidla na konkrétním místě: web, noviny, plakát. Systém eviduje, kde inzerce běží, a po prodeji připomíná její stažení. | F19, O9 | potvrzeno | |
-| Štítek za sklo | Tisknutelný štítek ve vozidle s informací o komisním prodeji a vlastníkovi. | L4 | otevřeno | Souvisí s OT4 — zákazník informuje o komisi až při prohlídce. |
+| Štítek za sklo | Tisknutelný štítek ve vozidle s informací o komisním prodeji a vlastníkovi. | L4 | potvrzeno | OT4 zodpovězena: informace o komisi se uvádí dopředu, nikoli až při prohlídce. |
 
 ## 6. Doklady a dokumenty
 
@@ -87,14 +88,14 @@ V týdnu 7 se slovník sjednotí s modelem tříd (#17).
 | Technický průkaz | Hovorový název dokladu o vozidle, formálně osvědčení o registraci vozidla. Je nutný k prodeji a předání. | F3, F23 | otevřeno | Zákazník může myslet „malý“, nebo „velký“ technický průkaz. Zjistit, který. |
 | Plná moc | Písemné zmocnění, kterým komitent opravňuje autobazar prodat jeho vozidlo. Součást kontrolního seznamu před předáním. | F8, F23 | potvrzeno | |
 | Kontrolní seznam před předáním | Podepsaná smlouva, technický průkaz, u komise plná moc, zaplaceno, identifikace zákazníka. Bez splnění nelze vozidlo označit jako předané. | F23 | potvrzeno | |
-| Údaje z osobního dokladu | Údaje evidované u zákazníka pro jeho identifikaci: jméno, příjmení, adresa a číslo řidičského průkazu. | F14, L2, L8, O14, O26 | otevřeno | Není určeno, zda se číslo řidičského průkazu eviduje u všech zákazníků, nebo jen u zkušebních jízd. Viz OT7. |
+| Údaje z osobního dokladu | Údaje evidované u zákazníka pro jeho identifikaci: jméno, příjmení, adresa a číslo dokladu. U zkušebních jízd navíc číslo řidičského průkazu a kontakt. | F14, L2, L8, O14, O26 | potvrzeno | OT7 zodpovězena: číslo řidičského průkazu se eviduje jen u zkušebních jízd, protože majitelem vozidla může být i člověk bez řidičského oprávnění. |
 
 ## 7. Role
 
 | Pojem | Definice | Zdroj | Stav | Poznámka |
 | --- | --- | --- | --- | --- |
 | Majitel | Nejvyšší role. Rozhoduje o požadavcích, schvaluje ceny a slevy, spravuje uživatele a vidí přehledy. | kap. 3, kap. 8, kap. 9, O2, O23 | potvrzeno | |
-| Seniorní obchodník | Obchodník s rozšířenými pravomocemi: schvaluje výkupní cenu a cenu protiúčtu, poskytuje slevy. | kap. 3, F7, F9, F25, O2 | otevřeno | Není určeno, kdo může tuto roli získat a kdo o jejím přidělení rozhoduje. Viz OT2. |
+| Seniorní obchodník | Obchodník s rozšířenými pravomocemi: schvaluje výkupní cenu a cenu protiúčtu, poskytuje slevy. | kap. 3, F7, F9, F25, O2 | potvrzeno | OT2 zodpovězena: o přidělení role rozhoduje majitel. |
 | Obchodník | Sjednává výkupní cenu, spravuje zájemce, rezervace a zkušební jízdy. Neposkytuje slevy ani neschvaluje ceny. | kap. 3, O1, O2 | potvrzeno | |
 | Pracovník přípravy | Připravuje vozidla a zapisuje práce a náklady. Nevidí nákupní ceny ani marži. | kap. 3, F4 | předpoklad | Zákazník mluví o „pracovníkovi skladu a přípravy vozidel“. Potvrdit, zda jde o jednu roli, a sjednotit název. Oprávnění odvodil tým, viz OT1. |
 | Účetní | Pracuje s platbami a účetními údaji. | kap. 3, O1, O2 | předpoklad | Oprávnění odvodil tým, viz OT1. |
@@ -138,17 +139,54 @@ Podle kapitoly 4.1 zadání v1.0. Stav *Staženo z prodeje* a přesné přechody
 
 ## 11. Pojmy k ověření se zákazníkem
 
-Deset pojmů má stav **otevřeno**. Dokud se nevyjasní, nesmí se podle nich navrhovat.
+Sedm pojmů má stav **otevřeno**. Dokud se nevyjasní, nesmí se podle nich navrhovat.
 
 | Pojem | Co je potřeba rozhodnout | Otevřená otázka |
 | --- | --- | --- |
-| Komisní prodej, Štítek za sklo | Uvádí se informace o komisi v nabídce a na vozidle, nebo až při prohlídce? | OT4 |
 | Nákupní cena vs. Výkupní cena | Je to jeden pojem? Pokud ano, jeden z nich zrušit. | — |
 | Zákazník vs. Zájemce | Zahrnuje pojem zákazník každého zájemce? | — |
 | Podržení, Rezervace, Záloha | Jak spolu tyto tři pojmy souvisejí? Zakládá záloha rezervaci? | OT12 |
 | Technický průkaz | Malý, nebo velký technický průkaz? | — |
-| Údaje z osobního dokladu | Eviduje se číslo řidičského průkazu u všech zákazníků? | OT7 |
 | Záruka | Jakou záruku zákazník poskytuje a jak ji sladit se zákonem? | OT5 |
-| Seniorní obchodník | Kdo roli přiděluje a komu? | OT2 |
 
 Tři z nich (Nákupní cena, Zákazník, Technický průkaz) nemají v katalogu vlastní otevřenou otázku. Patří tam doplnit.
+
+**Uzavřeno ve verzi 0.2** — zákazník odpověděl a stav pojmu se změnil na *potvrzeno*:
+
+| Pojem | Odpověď | Otázka |
+| --- | --- | --- |
+| Komisní prodej, Štítek za sklo | Zákazník musí o komisi vědět dopředu; informace patří do nabídky i na vozidlo. | OT4 |
+| Údaje z osobního dokladu | Číslo řidičského průkazu jen u zkušebních jízd. | OT7 |
+| Seniorní obchodník | O přidělení role rozhoduje majitel. | OT2 |
+
+Odpověď na **OT12** („auta mají přiřazeného obchodního zástupce, ten to vše řeší“) určuje odpovědnou osobu, ne chování systému. Pojmy Podržení, Rezervace a Záloha proto zůstávají otevřené — viz kapitola 5.3 [doménového modelu](../05-modely/domenovy-model.md).
+
+## 12. Srovnání s modelem tříd
+
+Sjednoceno podle #17. Každá z 19 tříd [doménového modelu](../05-modely/domenovy-model.md) má ve slovníku pojem **stejného názvu**; žádný pojem nebylo nutné přejmenovat ani zavádět synonymum.
+
+| Třída v modelu | Pojem ve slovníku | Kapitola | Stav pojmu |
+| --- | --- | --- | --- |
+| Vozidlo | Vozidlo | 2 | potvrzeno |
+| Náklady | Náklady | 2 | potvrzeno |
+| Komisní prodej | Komisní prodej | 3 | potvrzeno |
+| Komitent | Komitent | 3 | částečně |
+| Protiúčet | Protiúčet | 3 | částečně |
+| Plná moc | Plná moc | 6 | potvrzeno |
+| Zájemce | Zájemce | 4 | potvrzeno |
+| Zákazník | Zákazník | 4 | otevřeno |
+| Domluva | Domluva | 4 | potvrzeno |
+| Podržení | Podržení | 4 | otevřeno |
+| Rezervace | Rezervace | 4 | otevřeno |
+| Pořadí zájemců | Pořadí zájemců | 4 | potvrzeno |
+| Záloha | Záloha | 4 | otevřeno |
+| Obchodník | Obchodník | 7 | potvrzeno |
+| Kupní smlouva | Kupní smlouva | 6 | částečně |
+| Předávací protokol | Předávací protokol | 6 | potvrzeno |
+| Kontrolní seznam před předáním | Kontrolní seznam před předáním | 6 | potvrzeno |
+| Technický průkaz | Technický průkaz | 6 | otevřeno |
+| Sleva | Sleva | 3 | potvrzeno |
+
+Čtyři třídy stojí na pojmu se stavem **otevřeno** (Zákazník, Podržení, Rezervace, Záloha) a jedna na pojmu *částečně* s otevřenou otázkou (Protiúčet). Model je proto v těchto místech vede jako tečkované vztahy a netvrdí nic, co zákazník nepotvrdil.
+
+Pojmy ze slovníku, které **v modelu nejsou**: atributy vozidla (VIN, SPZ, technický stav, tachometr, ceny, marže), provozní pojmy (Plocha, Doba na ploše, Příprava vozidla, Lze ukázat, Veřejná nabídka, Inzerát, Štítek za sklo), role kromě Obchodníka, Zkušební jízda, Úvěr a legislativní zkratky. Důvody jsou v kapitole 3 doménového modelu; nejde o opomenutí.

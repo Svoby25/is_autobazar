@@ -2,10 +2,11 @@
 
 | Verze | Datum | Autor | Změna |
 | --- | --- | --- | --- |
-| 0.2 | 22. 10. 2026 | Jan Svoboda | Doplněna kapitola 5 s akceptačními kritérii ke všem M požadavkům (#5). U šesti požadavků kritérium nejde napsat, dokud zákazník neodpoví — shrnuto v kap. 5.9. Připraveno s pomocí AI, odvozeno z požadavků a odpovědí zákazníka. Podle plánu úkol patří testerovi, který kritéria zkontroluje.
+| 0.2 | 22. 10. 2026 | Jan Svoboda | Doplněna kapitola 5 s akceptačními kritérii ke všem M požadavkům (#5). U šesti požadavků kritérium nejde napsat, dokud zákazník neodpoví — shrnuto v kap. 5.9. Připraveno s pomocí AI, odvozeno z požadavků a odpovědí zákazníka. Podle plánu úkol patří testerovi, který kritéria zkontroluje. |
 | 0.1 | 15. 10. 2026 | Jan Svoboda | První verze převzatá ze zadání v1.0. Doplněny zdroje a stav validace u každého požadavku. Připraveno s pomocí AI, zdroje ověřeny ručně proti [otázkám a odpovědím](../02-zadani/otazky-a-odpovedi.md). |
 | 0.2 | 22. 10. 2026 | Martin Špaňúr | Vyřešeny nezodpovězené otázky díky komunikaci se zákazníkem. Požadavky podle toho upraveny. |
 | 0.3 | 29. 10. 2026 | Martin Špaňúr | Dodáno navíc odpovědi na otázky přímo do souboru. |
+| 0.4 | 12. 11. 2026 | Jan Svoboda | Doplněna a opravena akceptační kritéria podle scénářů klíčových UC (#14). Kapitola 5.9 zkrácena na jediný požadavek — u F18, F24, N5, L1 a L4 šlo kritérium napsat po odpovědích zákazníka na OT3, OT4 a OT9. Zapsán nový rozpor OT14 u archivační lhůty L3. Připraveno s pomocí AI, každé kritérium odvozeno z konkrétního scénáře a ověřeno proti odpovědi zákazníka. |
 
 ## 1. Účel a pravidla
 
@@ -139,7 +140,21 @@ Pravidla:
 - Kritérium je napsané tak, aby podle něj šlo rozhodnout **ano, nebo ne**. Formulace jako „rychle“ nebo „přehledně“ se nepoužívají.
 - Kritérium nedomýšlí, co zákazník neřekl. Tam, kde by muselo, je místo něj otevřená otázka — viz kapitola 5.9.
 - Odkazuje se na ně ve tvaru `F1/2`, tedy druhé kritérium požadavku F1.
-- Po sepsání scénářů případů užití se kritéria doplní podle toho, co ze scénářů vyplyne (#14).
+- Po sepsání scénářů případů užití se kritéria doplňují podle toho, co ze scénářů vyplynulo (#14).
+
+Ve verzi 0.4 přibyla tato kritéria přímo ze scénářů klíčových UC. Slouží i jako podklad pro matici trasovatelnosti (#28):
+
+| Kritérium | Scénář, ze kterého vyplynulo |
+| --- | --- |
+| F7/4 | [UC05](../04-pripady-uziti/uc05-zmenit-stav-vozidla.md) E2 — přechod do nabídky s neschválenou cenou |
+| F16/4, F29/4 | [UC05](../04-pripady-uziti/uc05-zmenit-stav-vozidla.md) kap. 4 — přechody stavů a jejich záznam |
+| F10/4 | [UC09](../04-pripady-uziti/uc09-zaevidovat-zajemce-a-domluvu.md) E2 — domluva bez druhu |
+| F14/4 | [UC09](../04-pripady-uziti/uc09-zaevidovat-zajemce-a-domluvu.md) E3 — jízda bez údajů z dokladu |
+| F11/3 | [UC10](../04-pripady-uziti/uc10-podrzet-vozidlo.md) E3 — platnost v minulosti |
+| F12/4 | [UC10](../04-pripady-uziti/uc10-podrzet-vozidlo.md) E1 — souběžný pokus dvou obchodníků |
+| F13/3 | [UC10](../04-pripady-uziti/uc10-podrzet-vozidlo.md) A5 — další zájemce v pořadí |
+| F8/4, F9/3, F22/3 | [UC19](../04-pripady-uziti/uc19-uc23-prodej-a-predani.md) E19.2, E19.3, E19.6 |
+| F23/4 | [UC23](../04-pripady-uziti/uc19-uc23-prodej-a-predani.md) E23.3 — nedoložená platba |
 
 ### 5.1 Evidence vozidel
 
@@ -170,11 +185,14 @@ Způsob výpočtu marže u komisního prodeje není popsán (viz poznámka u F4)
 | F7 | 1 | Výkupní cenu může zadat obchodník nebo majitel. |
 | F7 | 2 | Vozidlo s neschválenou výkupní cenou nelze zveřejnit ve veřejné nabídce. |
 | F7 | 3 | U schválení výkupní ceny je vidět, kdo ji schválil a kdy. |
+| F7 | 4 | Přechod vozidla do stavu *Připraveno k prodeji* systém odmítne, dokud není výkupní cena schválena. |
 | F8 | 1 | U komisního vozidla jsou povinné komitent a minimální prodejní cena. |
 | F8 | 2 | Prodej komisního vozidla za cenu nižší než minimální prodejní cena systém odmítne. |
 | F8 | 3 | Ke komisnímu vozidlu lze přiložit plnou moc. |
 | F9 | 1 | Cenu vozidla přijatého na protiúčet lze uložit až po schválení majitelem nebo seniorním obchodníkem. |
+| F8 | 4 | Prodej komisního vozidla nelze dokončit, dokud u vozidla není přiložena plná moc. |
 | F9 | 2 | Vozidlo přijaté na protiúčet vznikne jako nové vozidlo s odkazem na prodej, při kterém bylo přijato. |
+| F9 | 3 | Vozidlo přijaté na protiúčet nelze založit, dokud není jeho cena schválena majitelem nebo seniorním obchodníkem. |
 
 Pravidlo u F7/2 a blokaci u F8/2 odvodil tým, zákazník je nepotvrdil. Napojení podle F9/2 je rovněž návrh týmu.
 
@@ -185,18 +203,23 @@ Pravidlo u F7/2 a blokaci u F8/2 odvodil tým, zákazník je nepotvrdil. Napojen
 | F10 | 1 | K vozidlu lze přidat zájemce. |
 | F10 | 2 | K zájemci lze zapsat domluvu typu prohlídka, zkušební jízda, podržení, záloha nebo podpis dokumentu. |
 | F10 | 3 | U každé domluvy je vidět, kdo ji sjednal a kdy. |
+| F10 | 4 | Domluvu nelze uložit bez zvoleného druhu. |
 | F11 | 1 | Při vytvoření podržení se zadává doba jeho platnosti. |
 | F11 | 2 | Doba platnosti se nastavuje pro každé podržení zvlášť, není pevně daná. |
+| F11 | 3 | Podržení s dobou platnosti, která už uplynula, systém odmítne uložit. |
 | F12 | 1 | Vytvoření druhé platné rezervace téhož vozidla systém odmítne. |
 | F12 | 2 | K rezervovanému vozidlu lze přidat dalšího zájemce do pořadí. |
 | F12 | 3 | Pořadí zájemců je vidět u vozidla včetně toho, kdo je na řadě. |
+| F12 | 4 | Při souběžném pokusu dvou obchodníků o podržení téhož vozidla uspěje nejvýše jeden z nich; druhý dostane zprávu o konfliktu a aktuální stav vozidla. |
 | F13 | 1 | Po uplynutí doby podržení systém upozorní obchodníka, který ho sjednal. |
 | F13 | 2 | Po uplynutí doby podržení přestane být vozidlo rezervované a je nabídnuto dalšímu zájemci v pořadí. |
+| F13 | 3 | Nabídnutím vozidla dalšímu zájemci v pořadí nevzniká nová rezervace automaticky; vzniká až novým podržením podle F11. |
 | F14 | 1 | U zkušební jízdy jsou povinné datum, čas a vozidlo. |
 | F14 | 2 | U zkušební jízdy se evidují údaje z osobního dokladu zákazníka. |
 | F14 | 3 | Naplánované zkušební jízdy jsou vidět v kalendáři. |
+| F14 | 4 | Zkušební jízdu nelze uložit bez data, času a údajů z osobního dokladu. |
 
-Vztah podržení, zálohy a rezervace zatím není vyjasněný (OT12), proto kritéria F12 a F13 popisují jen to, co zákazník potvrdil. Rozsah údajů podle F14/2 upřesní OT7. Kalendář podle F14/3 navrhl tým.
+Odpověď na OT12 určuje, že vztah podržení, zálohy a rezervace řeší přiřazený obchodní zástupce. Je to odpověď o odpovědnosti osoby, ne o chování systému, proto kritéria F12 a F13 popisují jen to, co zákazník potvrdil, a pracují s pojmem jediného platného závazku. Kritéria F11/3, F12/4 a F13/3 vyplynula ze scénářů [UC10](../04-pripady-uziti/uc10-podrzet-vozidlo.md); F12/4 pokrývá hlavní riziko dvojího příslibu. Rozsah údajů podle F14/2 upřesnila odpověď na OT7: číslo řidičského průkazu se eviduje jen u zkušebních jízd. Kalendář podle F14/3 navrhl tým.
 
 ### 5.4 Inzerce a veřejná nabídka
 
@@ -207,11 +230,15 @@ Vztah podržení, zálohy a rezervace zatím není vyjasněný (OT12), proto kri
 | F16 | 1 | Ve veřejné nabídce jsou jen vozidla ve stavu Připraveno k prodeji a Rezervováno. |
 | F16 | 2 | Rezervované vozidlo je ve veřejné nabídce označené jako rezervované. |
 | F16 | 3 | Vozidlo ve stavu Prodáno se ve veřejné nabídce nezobrazí. |
+| F16 | 4 | Vozidlo ve stavu Staženo z prodeje se ve veřejné nabídce nezobrazí. |
 | F17 | 1 | Zákazník může z veřejné nabídky odeslat dotaz ke konkrétnímu vozidlu bez přihlášení. |
 | F17 | 2 | Zákazník může požádat o termín prohlídky. |
 | F17 | 3 | Žádost o prohlídku se zobrazí obchodníkovi, který ji potvrdí nebo odmítne. |
 
-Označení rezervovaných vozidel podle F16/2 a potvrzování termínu podle F17/3 navrhl tým. Ke **F18** kritérium zatím není, viz kapitola 5.9.
+| F18 | 1 | U komisního vozidla veřejná nabídka uvádí, že jde o komisní prodej, a kdo je vlastníkem vozidla. |
+| F18 | 2 | Tutéž informaci lze vytisknout na štítek za sklo vozidla. |
+
+Označení rezervovaných vozidel podle F16/2, potvrzování termínu podle F17/3 a tisk štítku podle F18/2 navrhl tým. Kritéria k F18 šlo napsat po odpovědi zákazníka na OT4 („zákazník musí vědět dopředu“), která zároveň potvrdila L4.
 
 ### 5.5 Komunikace a historie zákazníka
 
@@ -229,14 +256,20 @@ Co přesně patří mezi poprodejní kontakty, zákazník nezodpověděl (O14), 
 | --- | --- | --- |
 | F22 | 1 | Systém vygeneruje kupní smlouvu předvyplněnou údaji o vozidle a zákazníkovi. |
 | F22 | 2 | Systém vygeneruje předávací protokol obsahující technický stav, stav tachometru a odkaz na doklad z STK. |
+| F22 | 3 | Kupní smlouvu nelze vygenerovat, dokud není vyplněná identifikace zákazníka. |
 | F23 | 1 | Vozidlo nelze označit jako Předáno, dokud nejsou splněné všechny položky kontrolního seznamu. |
 | F23 | 2 | U komisního vozidla obsahuje kontrolní seznam i plnou moc. |
 | F23 | 3 | U každé splněné položky je vidět, kdo ji potvrdil a kdy. |
+| F23 | 4 | Dokud není splněná položka „zaplaceno“, vozidlo nelze označit jako Předáno. Podepsaná smlouva tím nepozbývá platnosti. |
 | F25 | 1 | Pole pro zadání slevy je přístupné jen seniornímu obchodníkovi a majiteli. |
 | F25 | 2 | U každé slevy je vidět, kdo ji zadal, kdy a v jaké výši. |
 | F26 | 1 | Systém umožní předat údaje o uzavřeném prodeji do účetního systému klienta. |
 
-Výši slevy zákazník neomezil, proto k F25 není kritérium na limit. Rozsah a formát údajů u F26/1 závisí na OT6. Ke **F24** kritérium zatím není, viz kapitola 5.9.
+| F24 | 1 | U prodeje lze zaevidovat platbu převodem, kartou, hotovostí i úvěrem. |
+| F24 | 2 | U prodeje lze zaevidovat zálohu přijatou před podpisem smlouvy. |
+| F24 | 3 | Hotovostní platbu vyšší než 100 000 Kč systém odmítne zaevidovat. |
+
+Výši slevy zákazník neomezil, proto k F25 není kritérium na limit. Rozsah a formát údajů u F26/1 upřesnila odpověď na OT6: účetní systém Pohoda, předávají se všechny faktury. Kritéria k F24 šlo napsat po odpovědi na OT3 („platba všude kartou i hotovost i úvěr“); F24/3 vychází z interního limitu potvrzeného v L1.
 
 ### 5.7 Upozornění, přehledy a historie
 
@@ -248,6 +281,7 @@ Výši slevy zákazník neomezil, proto k F25 není kritérium na limit. Rozsah 
 | F29 | 1 | U vozidla je historie změn ceny, stavu a slevy. |
 | F29 | 2 | U každé změny je vidět, kdo ji provedl, kdy, a jaká byla původní a nová hodnota. |
 | F29 | 3 | Záznam v historii změn nelze smazat ani upravit. |
+| F29 | 4 | U každé změny stavu vozidla je vidět, kdo ji provedl a kdy. |
 
 Kdy je vozidlo „dlouho neprodané“, zákazník neurčil, proto k této části F27 kritérium zatím není.
 
@@ -262,6 +296,7 @@ Kdy je vozidlo „dlouho neprodané“, zákazník neurčil, proto k této čás
 | N3 | 2 | Ze zálohy lze obnovit stav, který není starší než 1 den. |
 | N4 | 1 | Systém funguje při 300 vozidlech v nabídce. |
 | N4 | 2 | Systém zvládne 30 prodejů měsíčně bez zásahu do nastavení. |
+| N5 | 1 | Od otevření detailu vozidla po uložení podržení a odeslání potvrzení zákazníkovi uplyne nejvýše 5 minut. |
 | N6 | 1 | Každý zaměstnanec se přihlašuje vlastním účtem s e-mailem a heslem. |
 | N6 | 2 | Zablokovaný účet se nepřihlásí. |
 | N7 | 1 | Role, která nemá vidět nákupní ceny, náklady a marži, je nevidí v detailu, v seznamu ani v exportu. |
@@ -269,29 +304,37 @@ Kdy je vozidlo „dlouho neprodané“, zákazník neurčil, proto k této čás
 | N8 | 1 | Systém umožní současnou práci 10 zaměstnanců. |
 | N9 | 1 | Vozidlo lze založit vyplněním VIN, výkupní ceny a stavu, ostatní údaje lze doplnit později. |
 | L2 | 1 | Prodej na úvěr nelze dokončit bez vyplněné identifikace zákazníka z dokladu totožnosti. |
-| L3 | 1 | Údaje a doklady o identifikovaném zákazníkovi nelze smazat dříve než 10 let od obchodu. |
+| L1 | 1 | Hotovostní platbu vyšší než 100 000 Kč systém odmítne zaevidovat. |
+| L3 | 1 | Údaje a doklady o identifikovaném zákazníkovi nelze smazat dříve, než uplyne archivační lhůta uvedená v L3. |
+| L4 | 1 | U komisního vozidla je informace o komisním prodeji a vlastníkovi vidět ve veřejné nabídce. |
+| L4 | 2 | Tutéž informaci lze vytisknout na štítek za sklo vozidla. |
 | L6 | 1 | Předávací protokol nelze vygenerovat bez technického stavu, stavu tachometru a odkazu na doklad z STK. |
 | L7 | 1 | U prodeje se eviduje datum provedení přepisu. |
 | L7 | 2 | Systém upozorní, pokud přepis neproběhl do 10 pracovních dnů od předání. |
 | L8 | 1 | Po uplynutí doby uchování lze údaje zákazníka anonymizovat. |
 | L8 | 2 | Anonymizace se nevztahuje na údaje, které je nutné uchovat podle L3. |
 
-Mobilní použitelnost podle N1/2, zálohování podle N3 a rychlé zakládání podle N9/1 doplnil tým. Doba uchování u L8/1 není určena (OT8). Kdo posuzuje podezřelý obchod podle L2, není určeno. Požadavky **N5, L1, L4 a L5** kritérium zatím nemají, viz kapitola 5.9.
+Mobilní použitelnost podle N1/2, zálohování podle N3 a rychlé zakládání podle N9/1 doplnil tým. Dobu uchování u L8/1 upřesnila odpověď na OT8 jen rámcově (oprávněný zájem, žádost o smazání, GDPR), konkrétní lhůta určena není. Kdo posuzuje podezřelý obchod podle L2, stále není určeno.
+
+Kritéria k **N5, L1 a L4** šlo napsat po odpovědích zákazníka na OT9, OT3 a OT4. Hranici 5 minut v N5/1 potvrdil zákazník v odpovědi na OT9; počet kliknutí vědomě neurčuje. Kritérium **L3/1 je opraveno**: dříve uvádělo 10 let, zatímco text požadavku L3 uvádí 2 roky. Konkrétní číslo je nahrazeno odkazem na lhůtu v požadavku a samotný rozpor je zapsán jako **OT14**. Požadavek **L5** kritérium stále nemá, viz kapitola 5.9.
 
 ### 5.9 Požadavky, ke kterým kritérium zatím nejde napsat
 
-U šesti požadavků by kritérium muselo rozhodnout něco, co zákazník nepotvrdil, nebo co si odporuje. Definice „hotovo“ v takovém případě vyžaduje otevřenou otázku, ne domyšlený detail.
+Kritérium by muselo rozhodnout něco, co zákazník nepotvrdil, nebo co si odporuje. Definice „hotovo“ v takovém případě vyžaduje otevřenou otázku, ne domyšlený detail.
 
 | ID | Co chybí | Otevřená otázka |
 | --- | --- | --- |
-| F18 | Uvádí se informace o komisním prodeji už v nabídce, nebo až při prohlídce? Kritérium by muselo jedno z toho vyloučit. | OT4 |
-| F24 | Které způsoby platby systém přijímá. Odpověď 13 uvádí převod a kartu, odpověď 26 hotovost a úvěr. | OT3 |
-| N5 | Měřitelná hranice. Bez ní by kritérium znělo „zvládne to během několika vteřin“, což není ověřitelné. | OT9 |
-| L1 | Zda platí interní limit 100 000 Kč na hotovost, když si odpovědi 13 a 26 odporují. | OT3 |
-| L4 | Totéž co F18 z druhé strany — zákonný požadavek proti tomu, co řekl zákazník. | OT4 |
-| L5 | Délka záruční lhůty. Zákazník uvádí 2 měsíce, zákon dává 24, u použitého zboží lze zkrátit nejvýše na 12. | OT5 |
+| L5 | Délka záruční lhůty. Zákazník uvádí 2 měsíce u ojetých a v odpovědi na OT5 navíc 1 měsíc na motor a karoserii a půl roku na skryté vady. Zákon dává spotřebiteli 24 měsíců, u použitého zboží lze smluvně zkrátit nejvýše na 12. Kritérium by muselo jednu z těchto lhůt zvolit. | OT5 |
 
-Jakmile zákazník odpoví, kritéria se doplní a verze katalogu se zvýší.
+**Vyřešeno ve verzi 0.4.** Pět požadavků, které tu byly ve verzi 0.3, kritérium dostalo, protože zákazník mezitím odpověděl:
+
+| ID | Co odpověď přinesla | Nová kritéria |
+| --- | --- | --- |
+| F18, L4 | OT4: „Zákazník musí vědět dopředu.“ Informace o komisi patří do nabídky, ne až na prohlídku. | F18/1, F18/2, L4/1, L4/2 |
+| F24, L1 | OT3: „Platba všude kartou i hotovost i úvěr.“ Odpovědi O13 a O26 se nevylučují, doplňují se; interní limit 100 000 Kč na hotovost platí. | F24/1–3, L1/1 |
+| N5 | OT9: hranice 5 minut je nutná, počet kliknutí se neurčuje. | N5/1 |
+
+U L5 rozpor trvá, proto jako jediný zůstává bez kritéria. Scénář [UC23](../04-pripady-uziti/uc19-uc23-prodej-a-predani.md) záruční lhůtu proto neurčuje a pouze eviduje, že běží.
 
 ## 6. Otevřené otázky
 
@@ -299,7 +342,7 @@ Navazují na kap. 9 zadání v1.0. Po odpovědi zákazníka se přepíše stav d
 
 | ID | Otázka | Dotčené požadavky | Odpověď |
 | --- | --- | --- | --- |
-| OT1 | Jaká oprávnění má pracovník přípravy a účetní a kdo spravuje uživatele? | kap. 2.8, N6, N7 | Majitel spravuje uživatele. Účetní ani pracovník přípravy toto nedělá.
+| OT1 | Jaká oprávnění má pracovník přípravy a účetní a kdo spravuje uživatele? | kap. 2.8, N6, N7 | Majitel spravuje uživatele. Účetní ani pracovník přípravy toto nedělá. |
 | OT2 | Kdo může být seniorní obchodník a jak se do této role zaměstnanec dostane? | F7, F9, F25 | O seniorním obchodníkovi rozhoduje majitel. |
 | OT3 | Jakými způsoby zákazníci platí? Odpověď 13 uvádí převod a kartu, odpověď 26 hotovost do 100 000 Kč a úvěr. | F24, L1, L2 | Platba všude kartou i hotovost i úvěr. Podezření na bázi historie zákazníka (prvotní zákazník). |
 | OT4 | Souhlasí klient s uváděním informace o komisním prodeji v nabídce a na vozidle? | F18, L4 | Zákazník musí vědět dopředu. |
@@ -309,9 +352,10 @@ Navazují na kap. 9 zadání v1.0. Po odpovědi zákazníka se přepíše stav d
 | OT8 | Jak dlouho se mají uchovávat údaje o zákaznících, kteří nekoupili? | L8 | Po dobu oprávněného zájmu nebo žádosti o smazání údajů, nebo podle GDPR pokud data nesvěřil podle oprávněného zájmu. |
 | OT9 | Jaká hranice je pro N5 přijatelná, např. kolik vteřin nebo kliknutí? | N5 | Netřeba počet kliknutí specifikovat - doba do 5 minut odepsání přijetí/reakce je ale nutná. |
 | OT10 | Platí pro všechny nefunkční a legislativní požadavky priorita M? | N1–N9, L1–L8 | Nemusí být okamžitě podpora na tablet. |
-| OT11 | Odpovídají stavy vozidla a přechody mezi nimi praxi autobazaru? Kdy se vozidlo stahuje z prodeje? | kap. 2.1, F16 | Stačí jak to je viz. F16.
+| OT11 | Odpovídají stavy vozidla a přechody mezi nimi praxi autobazaru? Kdy se vozidlo stahuje z prodeje? | kap. 2.1, F16 | Stačí jak to je viz. F16. |
 | OT12 | Jak spolu souvisí podržení, záloha a rezervace?  | F11, F12 | Auta mají přiřazeného obchodního zástupce, ten to vše řeší. |
 | OT13 | Kdo po vypršení podržení kontaktuje dalšího zájemce? | F13 | Obchodní zástupci spolu komunikují přes systém, v minimální verzi komunikace může probíhat mimo systém. |
+| OT14 | Jak dlouho se archivují údaje a doklady o identifikovaných zákaznících podle AML? Text požadavku L3 uvádí 2 roky, původní akceptační kritérium L3/1 uvádělo 10 let. | L3, L8 | |
 
 ## 7. ~~Souhrn~~ dávno outdated, není třeba?
 
