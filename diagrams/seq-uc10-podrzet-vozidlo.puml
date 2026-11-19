@@ -1,0 +1,58 @@
+@startuml
+' v0.1 | 2026-11-19 | Návrh s pomocí AI; kontrola týmem čeká.
+' Scénář: 04-pripady-uziti/ — UC10 Podržet vozidlo pro zájemce (F11, F12, N5)
+title UC10: Podržet vozidlo pro zájemce
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam sequenceParticipantBackgroundColor #EDF4FA
+skinparam sequenceParticipantBorderColor #35536B
+skinparam NoteBackgroundColor #FFF5D6
+
+actor "Obchodník" as O
+participant "Vozidlo" as V
+participant "Zájemce" as Z
+participant "Podržení" as P
+participant "Rezervace" as R
+participant "Pořadí zájemců" as PO
+
+O -> V : ověřit stav a platnou rezervaci()
+V -> R : existuje platná rezervace?
+
+alt Stav == "Připraveno k prodeji" a bez platné rezervace (hlavní scénář)
+  R --> V : ne
+  V --> O : vozidlo je volné
+
+  O -> P ** : založit(druh="podržení", obsah, sjednáno kdy, platnost do)
+  note right of P
+    Podržení dědí vazbu na Vozidlo,
+    Zájemce a Obchodníka z Domluvy.
+  end note
+  P -> V : týká se vozidla
+  P -> Z : sjednává zájemce
+
+  O -> R ** : založit(platnost)
+  note right of R
+    OT12: vztah Podržení a Rezervace
+    je otevřený — zde modelováno
+    jako souběžné založení.
+  end note
+  R -> V : přiřadit k historii rezervací
+  R -> Z : rezervováno pro zájemce
+
+  O -> V : změnit stav na "Rezervováno"
+  V --> O : podržení potvrzeno
+
+else Vozidlo již má platnou rezervaci (nešťastný průběh – F12)
+  R --> V : ano
+  V --> O : odmítnuto (vozidlo již drží jiný zájemce)
+
+  opt Obchodník zařadí zájemce do pořadníku
+    O -> PO : přidat čekajícího(Z)
+    PO -> Z : zařadit do pořadí
+    PO --> O : zájemce zařazen do pořadí
+  end
+
+else Jiný stav vozidla (např. "V přípravě", "Prodáno")
+  V --> O : odmítnuto (vozidlo nelze podržet)
+end
+@enduml
