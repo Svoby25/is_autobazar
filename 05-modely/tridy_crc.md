@@ -26,3 +26,6 @@
 | ZaznamZmeny | Vytváří neměnnou auditní historii změn vozidla. Uchovává změněný atribut, původní hodnotu, novou hodnotu, čas změny a uživatele, který změnu provedl. Zvlášť důležité jsou změny ceny, stavu a slevy. Auditní záznam nelze následně upravit ani smazat. | Záznam změny patří jednomu vozidlu a odkazuje na uživatele, který změnu provedl. Může evidovat také změny související s prodejem, například přidání slevy. Slouží jako podklad pro kontrolu a zobrazení historie vozidla. |
 
 # Diagram tříd
+![Diagram tříd](../diagrams/diagram-trid.svg)
+
+Některé části dokumentu byly vygenerované AI.
