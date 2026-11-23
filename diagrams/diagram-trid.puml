@@ -1,0 +1,258 @@
+@startuml
+
+title Informační systém autobazaru
+
+top to bottom direction
+
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam nodesep 35
+skinparam ranksep 45
+
+' ==========================================================
+' ORGANIZACE
+' ==========================================================
+
+class Pobocka {
+    - id: Long
+    - nazev: String
+    - adresa: String
+    - telefon: String
+    - email: String
+}
+
+class Uzivatel {
+    - id: Long
+    - jmeno: String
+    - prijmeni: String
+    - email: String
+    - aktivni: Boolean
+    --
+    + maOpravneni(opravneni: String): Boolean
+    + zablokovat(): void
+}
+
+class Role {
+    - id: Long
+    - nazev: String
+    - opravneni: String
+    --
+    + obsahujeOpravneni(opravneni: String): Boolean
+}
+
+' ==========================================================
+' VOZIDLA
+' ==========================================================
+
+class Vozidlo {
+    - vin: String
+    - spz: String
+    - znacka: String
+    - model: String
+    - technickyStav: String
+    - stavTachometru: Integer
+    - vykupniCena: Decimal
+    - prodejniCena: Decimal
+    - datumPrijeti: Date
+    - typProdeje: String
+    - stav: String
+    --
+    + spocitatPorizovaciCenu(): Decimal
+    + spocitatMarzi(): Decimal
+    + zmenitStav(stav: String): void
+}
+
+class Naklad {
+    - id: Long
+    - castka: Decimal
+    - datum: Date
+    - druh: String
+    - popis: String
+}
+
+class Dokument {
+    - id: Long
+    - typ: String
+    - nazevSouboru: String
+    - umisteni: String
+    - datumVlozeni: DateTime
+}
+
+class Inzerat {
+    - id: Long
+    - kanal: String
+    - datumZverejneni: Date
+    - datumStazeni: Date
+    - aktivni: Boolean
+    --
+    + zverejnit(): void
+    + stahnout(): void
+}
+
+class ZaznamZmeny {
+    - id: Long
+    - atribut: String
+    - puvodniHodnota: String
+    - novaHodnota: String
+    - datumZmeny: DateTime
+}
+
+' ==========================================================
+' ZAKAZNICI A ZAJEM
+' ==========================================================
+
+class Zakaznik {
+    - id: Long
+    - jmeno: String
+    - prijmeni: String
+    - email: String
+    - telefon: String
+    - adresa: String
+    - identifikacniUdaje: String
+    --
+    + anonymizovat(): void
+}
+
+class ZajemOVozidlo {
+    - id: Long
+    - datumVzniku: DateTime
+    - poradi: Integer
+    - stav: String
+    - poznamka: String
+    --
+    + ukoncit(): void
+    + zmenitPoradi(poradi: Integer): void
+}
+
+class Domluva {
+    - id: Long
+    - typ: String
+    - datumSjednani: DateTime
+    - platnostDo: DateTime
+    - popis: String
+    --
+    + jePlatna(): Boolean
+    + ukoncit(): void
+}
+
+class Rezervace {
+    - id: Long
+    - platnostOd: DateTime
+    - platnostDo: DateTime
+    - stav: String
+    - vyseZalohy: Decimal
+    --
+    + jePlatna(): Boolean
+    + zrusit(): void
+}
+
+class ZkusebniJizda {
+    - id: Long
+    - zacatek: DateTime
+    - konec: DateTime
+    - cisloRidicskehoPrukazu: String
+    - kontakt: String
+    - stav: String
+    --
+    + potvrdit(): void
+    + zrusit(): void
+}
+
+' ==========================================================
+' PRODEJ
+' ==========================================================
+
+class Prodej {
+    - id: Long
+    - datumUzavreni: Date
+    - sjednanaCena: Decimal
+    - sleva: Decimal
+    - zarukaDo: Date
+    - stavPredani: String
+    - datumPrepisu: Date
+    --
+    + spocitatZaplacenouCastku(): Decimal
+    + lzePredat(): Boolean
+    + dokoncit(): void
+}
+
+class Platba {
+    - id: Long
+    - castka: Decimal
+    - datum: DateTime
+    - zpusob: String
+    - zaplacena: Boolean
+    --
+    + potvrditPrijeti(): void
+    + overitHotovostniLimit(): Boolean
+}
+
+class Upozorneni {
+    - id: Long
+    - typ: String
+    - text: String
+    - vytvoreno: DateTime
+    - precteno: Boolean
+    --
+    + oznacitJakoPrectene(): void
+}
+
+' ==========================================================
+' VZTAHY
+' ==========================================================
+
+Pobocka "1" -down- "0..*" Vozidlo : eviduje
+Pobocka "*" -right- "*" Uzivatel : zamestnava
+Uzivatel "*" -right- "*" Role : ma
+
+Vozidlo "1" *-left- "0..*" Naklad : naklady
+Vozidlo "1" *-left- "0..*" Dokument : dokumentace
+Vozidlo "1" -right- "0..*" Inzerat : inzerce
+Vozidlo "1" *-right- "0..*" ZaznamZmeny : historie
+
+Vozidlo "1" -down- "0..*" ZajemOVozidlo : ma zajemce
+Zakaznik "1" -right- "0..*" ZajemOVozidlo : projevi
+
+ZajemOVozidlo "1" *-down- "0..*" Domluva : obsahuje
+ZajemOVozidlo "1" -down- "0..1" Rezervace : vede k
+
+Vozidlo "1" -down- "0..*" Rezervace : rezervace
+Zakaznik "1" -down- "0..*" Rezervace : vytvari
+
+Domluva "0..1" -down- "0..1" ZkusebniJizda : vede k
+Vozidlo "1" -down- "0..*" ZkusebniJizda : vozidlo
+Zakaznik "1" -down- "0..*" ZkusebniJizda : absolvuje
+
+Vozidlo "1" -down- "0..1" Prodej : predmet prodeje
+Zakaznik "1" -down- "0..*" Prodej : kupuje
+
+Prodej "1" *-right- "1..*" Platba : platby
+Prodej "1" -left- "0..*" Dokument : dokumenty
+Rezervace "0..1" -right- "0..*" Platba : zaloha
+
+Uzivatel "1" -down- "0..*" Prodej : zpracovava
+Uzivatel "1" -down- "0..*" ZaznamZmeny : provedl
+
+Uzivatel "1" -down- "0..*" Upozorneni : prijima
+Vozidlo "0..1" -down- "0..*" Upozorneni : tyka se
+
+' ==========================================================
+' OMEZENI
+' ==========================================================
+
+note left of Vozidlo
+    VIN je povinne a jedinecne.
+    SPZ muze chybet.
+end note
+
+note left of Rezervace
+    Jedno vozidlo muze mit nejvyse
+    jednu platnou rezervaci.
+end note
+
+note right of Platba
+    Hotovostni platba nesmi prekrocit
+    interni limit 100 000 Kc.
+end note
+
+@enduml
