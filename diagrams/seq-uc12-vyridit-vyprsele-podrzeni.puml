@@ -1,6 +1,7 @@
 @startuml
 ' v0.1 | 2026-11-19 | Návrh s pomocí AI; kontrola týmem čeká.
-' Scénář: 04-pripady-uziti/ — UC12 Vyřídit vypršelé podržení (F13)
+' Scénář: ../04-pripady-uziti/uc10-podrzet-vozidlo.md — alternativa A6 a kap. 6 (F13)
+' Pozn.: UC12 nemá vlastní specifikaci, navazuje na UC10.
 title UC12: Vyřídit vypršelé podržení
 skinparam defaultFontName Arial
 skinparam shadowing false
