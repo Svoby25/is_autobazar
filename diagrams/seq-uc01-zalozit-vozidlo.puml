@@ -1,5 +1,5 @@
 @startuml
-' v0.1 | 2026-11-19 | Návrh s pomocí AI; kontrola týmem čeká.
+' v0.2 | 2026-11-23 | Upřesněna poznámka k VIN a směr napojení protiúčtu (#22).
 ' Scénář: ../04-pripady-uziti/pripady-uziti.md — UC01 Založit vozidlo (F1, F2, F6, N9)
 ' Pozn.: UC01 není mezi klíčovými UC vybranými pro M1, samostatnou specifikaci nemá.
 title UC01: Založit vozidlo
@@ -20,8 +20,10 @@ participant "Technický průkaz" as TP
 
 O -> V ** : založit(VIN, SPZ, hrubý technický stav, typ prodeje, výkupní cena)
 note right of V
-  Chybí třída/katalog pro ověření
-  unikátnosti VIN (viz zjištění v PR).
+  Unikátnost VIN je omezení na atributu
+  třídy Vozidlo (F1/2), ne samostatná třída.
+  Vypořádáno v kap. 8 doprovodného dokumentu
+  doménového modelu (#22).
 end note
 
 alt Duplicitní VIN (nešťastný průběh)
@@ -40,7 +42,12 @@ else VIN je unikátní (hlavní scénář)
   opt Typ prodeje == protiúčet (F9)
     O -> PR ** : založit(cena protiúčtu)
     PR -> V : propojit přijaté vozidlo
-    S -> PR : napojit na původní kupní smlouvu
+    PR -> S : navázat na původní prodej (F9/2)
+    note right of S
+      Iniciátorem je zakládané vozidlo na protiúčet,
+      ne smlouva — ta v tomto průběhu už existuje
+      z dřívějšího prodeje (UC19).
+    end note
   end
 
   opt Přiložení technického průkazu (F3)
