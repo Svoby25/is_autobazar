@@ -2,6 +2,7 @@
 
 | Verze | Datum | Autor | Změna |
 | --- | --- | --- | --- |
+| 0.2 | 23. 11. 2026 | Jan Svoboda | Vypořádány nálezy ze sekvenčních diagramů (#22): doplněna kapitola 8, omezení unikátnosti VIN u atributu a vědomé vynechání upozornění v kapitole 3. Struktura tříd ani vazby se nemění. |
 | 0.1 | 12. 11. 2026 | Jan Svoboda | První verze (#16). Doprovodný text k [doménovému diagramu tříd](../diagrams/trid-domenovy.svg), na který diagram odkazuje: odpovědnosti tříd, zdroje atributů, omezení modelu a vysvětlení poznámek P1–P3 a Q1–Q4 z diagramu. Připraveno s pomocí AI, každá odpovědnost ověřena proti konkrétnímu požadavku, scénáři nebo odpovědi zákazníka; co se ověřit nedalo, je vedeno jako otevřená otázka v kap. 5. |
 
 ## 1. K čemu model slouží
@@ -60,6 +61,7 @@ Každá třída má jednu až dvě věty o tom, za co v systému odpovídá, a z
 | Platbu jako proces | Evidenci platby řeší UC24 a napojení na účetní systém Pohoda (F26, OT6). Model drží jen Zálohu jako doloženou skutečnost. |
 | Inzerát a veřejnou nabídku | Priorita S (F19, F20) nebo vlastnost zobrazení, ne doménový pojem jádra scénářů. |
 | Stav jako samostatnou hierarchii tříd | Stav je atribut Vozidla. Přechody popisuje [UC05](../04-pripady-uziti/uc05-zmenit-stav-vozidla.md), ne struktura tříd. |
+| Upozornění | F13/1 a F27 žádají upozornění na vypršené podržení, nevyřízené doklady, neprovedený přepis a dlouho neprodaná vozidla. Jde o zobrazení odvozené z dat, která model už drží (platnost do, stav, kontrolní seznam, datum přepisu), ne o samostatný doménový pojem — slovník ho také nemá. Zachycení jako třídy by dávalo smysl, až kdyby se upozornění měla evidovat; to je otázka Q5 v kapitole 8. UC25 navíc není mezi klíčovými UC pro M1. |
 | Vlastní vozidlo / komisní / protiúčet jako podtřídy Vozidla | Původ a vlastnictví se mohou v čase měnit — vozidlo přijaté na protiúčet se stane vlastním a může jít dál do prodeje. Neměnné podtřídy by to znemožnily. Proto je *typ prodeje* atribut (P1). |
 
 ## 4. Zdroje atributů
@@ -69,6 +71,7 @@ Atributy jsou jen ty, které vyplývají ze zadání nebo ze scénářů.
 | Třída | Atribut | Zdroj |
 | --- | --- | --- |
 | Vozidlo | VIN, SPZ (nepovinná), hrubý technický stav, výkupní cena | F1, O4 |
+| Vozidlo | VIN je **jednoznačný identifikátor** — druhé vozidlo se stejným VIN systém odmítne (F1/2) | F1, kritérium F1/2 |
 | Vozidlo | technický stav | F15, L6 |
 | Vozidlo | stav | kap. 4.1 zadání, OT11 |
 | Vozidlo | typ prodeje | F6, O5 |
@@ -143,3 +146,28 @@ Situace, které model **neunese a ani nemá**: evidence platby, správa uživate
 - **Slovník:** [slovnik-pojmu.md](../03-pozadavky/slovnik-pojmu.md), kapitola 12 obsahuje srovnání názvů tříd s pojmy.
 - **Scénáře:** specifikace [UC05](../04-pripady-uziti/uc05-zmenit-stav-vozidla.md), [UC09](../04-pripady-uziti/uc09-zaevidovat-zajemce-a-domluvu.md), [UC10](../04-pripady-uziti/uc10-podrzet-vozidlo.md), [UC19 a UC23](../04-pripady-uziti/uc19-uc23-prodej-a-predani.md).
 - **Navazuje:** sekvenční diagramy (#21), konsolidovaný model tříd v plné UML notaci (#23).
+
+## 8. Co ukázaly sekvenční diagramy
+
+Vypořádání nálezů podle #22. Sekvenční diagramy z #21 prověřily model tím, že si od tříd vyžádaly konkrétní odpovědnosti. Dva nálezy si diagramy poznamenaly samy, čtyři vyšly najevo při porovnání se scénáři.
+
+Dobrá zpráva nejdřív: **všech 20 objektů ve třech sekvencích existuje v modelu jako třída a názvy souhlasí.** Žádná sekvence si nevymyslela pojem, který by model neznal.
+
+| ID | Co sekvence ukázala | Vypořádání |
+| --- | --- | --- |
+| **S1** | [UC12](../diagrams/seq-uc12-vyridit-vyprsele-podrzeni.svg) zakládal po potvrzení zájmu nové Podržení i Rezervaci přímo, čímž obcházel celý UC10 včetně ověření konfliktu při ukládání. | **Opraveno v diagramu.** Nahrazeno odkazem `ref over` na UC10. Odpovídá alternativě A5 v [UC10](../04-pripady-uziti/uc10-podrzet-vozidlo.md) a kritériu F13/3 — nová rezervace nevzniká automaticky. |
+| **S2** | Tentýž diagram tvrdil, že vozidlo po zániku závazku zůstává ve stavu *Rezervováno*. | **Opraveno v diagramu.** Doplněn přechod na *Připraveno k prodeji* podle tabulky přechodů v [UC05](../04-pripady-uziti/uc05-zmenit-stav-vozidla.md) a F13/2. Nový závazek stav vrátí zpět, ale až průchodem UC10. |
+| **S3** | [UC01](../diagrams/seq-uc01-zalozit-vozidlo.svg) posílal zprávu *napojit na původní kupní smlouvu* od Kupní smlouvy, která v průběhu zakládání vozidla na protiúčet nevystupuje. | **Opraveno v diagramu.** Směr obrácen: iniciátorem je zakládaný Protiúčet (F9/2). Smlouva v tu chvíli existuje z dřívějšího prodeje. |
+| **S4** | UC01 si poznamenal, že *chybí třída/katalog pro ověření unikátnosti VIN*. | **Vyřešeno upřesněním, ne novou třídou.** Unikátnost VIN je omezení na atributu třídy Vozidlo (F1/2), doplněné do kapitoly 4. Kolekce vozidel není doménový pojem — zavádět třídu „Evidence vozidel“ by byl návrh úložiště, ne analýza. |
+| **S5** | UC12 si poznamenal, že *mechanismus upozornění obchodníka (F13, F27) není v modelu zachycen*. | **Rozhodnuto nezachycovat,** důvod je v kapitole 3. Upozornění jsou zobrazení odvozené z dat, která model drží. Pokud se mají evidovat, bude třída potřeba — viz Q5 níže. |
+| **S6** | UC01 vytváří Vozidlo dřív, než ověří VIN, a při duplicitě ho ruší (`destroy`). | **Ponecháno.** V doménovém modelu bez třídy pro evidenci není kam ověření umístit dřív; `destroy` je přijatelná konvence pro „záznam nevznikne“. Při přechodu na návrhový model (#23) se to vyřeší samo. |
+
+### Nová otevřená otázka
+
+| ID | Otázka | Dopad |
+| --- | --- | --- |
+| **Q5** | Mají se upozornění (F13/1, F27) evidovat — s historií, potvrzením, že je někdo viděl, nebo adresátem — nebo stačí, aby se odvozovala z dat při zobrazení? Zákazník v odpovědi O15 vyjmenoval, na co chce upozorňovat, ne jak se to má uchovávat. | Rozhoduje, jestli model potřebuje třídu Upozornění. Dokud není odpověď, model ji nemá (S5). |
+
+### Co z toho šlo do jiných artefaktů
+
+Nic. Žádný nález neměnil požadavek, takže katalog ani slovník se nedotkly. Změny jsou ve dvou sekvenčních diagramech a v tomto dokumentu; struktura tříd a jejich vazby v [diagramu tříd](../diagrams/trid-domenovy.svg) zůstávají beze změny.

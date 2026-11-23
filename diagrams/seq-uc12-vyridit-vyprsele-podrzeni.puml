@@ -1,5 +1,5 @@
 @startuml
-' v0.1 | 2026-11-19 | Návrh s pomocí AI; kontrola týmem čeká.
+' v0.2 | 2026-11-23 | Nové podržení vedeno přes UC10, doplněn přechod stavu (#22).
 ' Scénář: ../04-pripady-uziti/uc10-podrzet-vozidlo.md — alternativa A6 a kap. 6 (F13)
 ' Pozn.: UC12 nemá vlastní specifikaci, navazuje na UC10.
 title UC12: Vyřídit vypršelé podržení
@@ -19,7 +19,8 @@ participant "Zájemce" as Z
 note over O, P
   Předpoklad: u Podržení uplynula "platnost do".
   Mechanismus upozornění obchodníka (F13, F27)
-  není v doménovém modelu zachycen.
+  není v doménovém modelu zachycen — vypořádáno
+  v kap. 8 doprovodného dokumentu modelu (#22).
 end note
 
 O -> P : ověřit vypršení(platnost do)
@@ -29,6 +30,13 @@ O -> R : ukončit platnost rezervace()
 note right of R
   Ukončená rezervace zůstává
   v historii rezervací vozidla (0..*).
+end note
+
+O -> V : změnit stav na "Připraveno k prodeji"
+note right of V
+  UC05: zánikem závazku vozidlo přestává být
+  rezervované (F13/2). Nová rezervace vzniká
+  až novým podržením, ne tímto krokem.
 end note
 
 O -> V : zjistit dalšího zájemce()
@@ -43,10 +51,13 @@ alt V pořadí čeká další zájemce (hlavní scénář)
   alt Zájemce má zájem
     Z --> O : potvrzení zájmu
     O -> PO : odebrat čekajícího(Z)
-    O -> P : založit nové Podržení(V, Z, platnost do)
-    O -> R : založit novou Rezervace(V, Z, platnost)
-    note right of V
-      Vozidlo zůstává ve stavu "Rezervováno".
+
+    ref over O, R : UC10 Podržet vozidlo pro zájemce
+    note right of R
+      F13/3: nová rezervace nevzniká automaticky.
+      Nové podržení prochází celým UC10 včetně
+      ověření konfliktu při ukládání (F12/4),
+      proto se tu nezakládá přímo.
     end note
   else Zájemce odmítl (nešťastný průběh)
     Z --> O : odmítnutí
