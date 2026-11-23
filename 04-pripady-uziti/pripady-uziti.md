@@ -3,6 +3,7 @@
 | Verze | Datum | Autor | Změna |
 | --- | --- | --- | --- |
 | 0.1 | 15. 10. 2026 | Jan Svoboda | První verze UC diagramu a seznamu případů užití s trasováním na požadavky (#9). Připraveno s pomocí AI, ověřeno proti [katalogu požadavků](../03-pozadavky/katalog-pozadavku.md) v0.1. |
+| 0.2 | 12. 11. 2026 | Jan Svoboda | Doplněna kapitola s odkazy na specifikace pěti klíčových UC (#11). Seznam UC ani diagram se nemění. |
 
 ## Diagram
 
@@ -18,6 +19,20 @@ Zdroj: [`diagrams/uc-diagram.puml`](../diagrams/uc-diagram.puml). Aktéři jsou 
 - účetnictví.
 
 **Přihlášení** se jako samostatný případ užití nekreslí. Je předpokladem všech případů užití zaměstnanců (N6).
+
+## Specifikace klíčových UC
+
+Pro M1 je podrobně rozpracováno pět případů užití vybraných v dokumentu [vyber-klicovych-uc.md](vyber-klicovych-uc.md). Ostatní UC zůstávají v seznamu a v diagramu bez samostatné specifikace.
+
+| UC | Specifikace | Activity diagram |
+| --- | --- | --- |
+| UC05 Změnit stav vozidla | [uc05-zmenit-stav-vozidla.md](uc05-zmenit-stav-vozidla.md) | — |
+| UC09 Zaevidovat zájemce a domluvu | [uc09-zaevidovat-zajemce-a-domluvu.md](uc09-zaevidovat-zajemce-a-domluvu.md) | — |
+| UC10 Podržet vozidlo pro zájemce | [uc10-podrzet-vozidlo.md](uc10-podrzet-vozidlo.md) | [rezervace](../diagrams/activity-rezervace.svg) |
+| UC19 Prodat vozidlo | [uc19-uc23-prodej-a-predani.md](uc19-uc23-prodej-a-predani.md) | [prodej](../diagrams/activity-prodej.svg) |
+| UC23 Předat vozidlo | [uc19-uc23-prodej-a-predani.md](uc19-uc23-prodej-a-predani.md) | [prodej](../diagrams/activity-prodej.svg) |
+
+UC19 a UC23 sdílejí jeden dokument i jeden diagram, protože na sebe přímo navazují. Hranici mezi nimi tvoří podepsaná smlouva a stav *Prodáno*.
 
 ## Seznam případů užití
 
