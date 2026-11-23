@@ -1,0 +1,79 @@
+@startuml
+' v0.2 | 2026-11-23 | Doplněno druhé ověření rezervace při ukládání (E1, F12/4).
+' Scénář: ../04-pripady-uziti/uc10-podrzet-vozidlo.md — hlavní scénář a E1 (F11, F12, N5)
+title UC10: Podržet vozidlo pro zájemce
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam sequenceParticipantBackgroundColor #EDF4FA
+skinparam sequenceParticipantBorderColor #35536B
+skinparam NoteBackgroundColor #FFF5D6
+
+actor "Obchodník" as O
+participant "Vozidlo" as V
+participant "Zájemce" as Z
+participant "Podržení" as P
+participant "Rezervace" as R
+participant "Pořadí zájemců" as PO
+
+O -> V : ověřit stav a platnou rezervaci()
+V -> R : existuje platná rezervace?
+
+alt Stav == "Připraveno k prodeji" a bez platné rezervace (hlavní scénář)
+  R --> V : ne
+  V --> O : vozidlo je volné
+
+  O -> V : uložit podržení(zájemce, platnost do)
+  V -> R : stále bez platné rezervace?
+  note right of R
+    Druhé ověření je záměrné. Mezi zobrazením
+    stavu a uložením mohl jiný obchodník
+    závazek vytvořit — viz UC10 krok 6 a F12/4.
+  end note
+
+  alt Stále bez platné rezervace
+    R --> V : ne
+
+    O -> P ** : založit(druh="podržení", obsah, sjednáno kdy, platnost do)
+    note right of P
+      Podržení dědí vazbu na Vozidlo,
+      Zájemce a Obchodníka z Domluvy.
+    end note
+    P -> V : týká se vozidla
+    P -> Z : sjednává zájemce
+
+    O -> R ** : založit(platnost)
+    note right of R
+      OT12: vztah Podržení a Rezervace
+      je otevřený — zde modelováno
+      jako souběžné založení.
+    end note
+    R -> V : přiřadit k historii rezervací
+    R -> Z : rezervováno pro zájemce
+
+    O -> V : změnit stav na "Rezervováno"
+    V --> O : podržení potvrzeno
+
+  else Mezitím vznikl jiný závazek (E1 — souběžný pokus dvou obchodníků)
+    R --> V : ano
+    V --> O : odmítnuto (konflikt, zobrazen aktuální stav)
+    note right of O
+      F12/4: uspět smí nejvýše jeden
+      z obou obchodníků. Zájemce lze
+      zařadit do pořadí jako níže.
+    end note
+  end
+
+else Vozidlo již má platnou rezervaci (nešťastný průběh – F12)
+  R --> V : ano
+  V --> O : odmítnuto (vozidlo již drží jiný zájemce)
+
+  opt Obchodník zařadí zájemce do pořadníku
+    O -> PO : přidat čekajícího(Z)
+    PO -> Z : zařadit do pořadí
+    PO --> O : zájemce zařazen do pořadí
+  end
+
+else Jiný stav vozidla (např. "V přípravě", "Prodáno")
+  V --> O : odmítnuto (vozidlo nelze podržet)
+end
+@enduml

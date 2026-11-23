@@ -1,0 +1,53 @@
+@startuml
+' v0.1 | 2026-11-19 | Návrh s pomocí AI; kontrola týmem čeká.
+' Scénář: ../04-pripady-uziti/pripady-uziti.md — UC01 Založit vozidlo (F1, F2, F6, N9)
+' Pozn.: UC01 není mezi klíčovými UC vybranými pro M1, samostatnou specifikaci nemá.
+title UC01: Založit vozidlo
+skinparam defaultFontName Arial
+skinparam shadowing false
+skinparam sequenceParticipantBackgroundColor #EDF4FA
+skinparam sequenceParticipantBorderColor #35536B
+skinparam NoteBackgroundColor #FFF5D6
+
+actor "Obchodník" as O
+participant "Vozidlo" as V
+participant "Komisní prodej" as K
+participant "Komitent" as KO
+participant "Plná moc" as PM
+participant "Protiúčet" as PR
+participant "Kupní smlouva" as S
+participant "Technický průkaz" as TP
+
+O -> V ** : založit(VIN, SPZ, hrubý technický stav, typ prodeje, výkupní cena)
+note right of V
+  Chybí třída/katalog pro ověření
+  unikátnosti VIN (viz zjištění v PR).
+end note
+
+alt Duplicitní VIN (nešťastný průběh)
+  V --> O : odmítnuto (VIN již v evidenci existuje)
+  destroy V
+else VIN je unikátní (hlavní scénář)
+  V -> V : nastavit stav = "Evidováno"
+
+  opt Typ prodeje == komisní (F8)
+    O -> K ** : založit(minimální prodejní cena, marže)
+    K -> KO : přiřadit komitenta
+    K -> PM : přiložit plnou moc
+    V -> K : evidovat komisní dohodu
+  end
+
+  opt Typ prodeje == protiúčet (F9)
+    O -> PR ** : založit(cena protiúčtu)
+    PR -> V : propojit přijaté vozidlo
+    S -> PR : napojit na původní kupní smlouvu
+  end
+
+  opt Přiložení technického průkazu (F3)
+    O -> TP ** : přiložit doklad
+    V -> TP : přiřadit k vozidlu
+  end
+
+  V --> O : vozidlo zaevidováno
+end
+@enduml
